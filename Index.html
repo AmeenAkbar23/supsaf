@@ -12,6 +12,14 @@
   <p>Free stock photos for creators</p>
 </header>
 
+<!-- FILTER BUTTONS (THIS WAS MISSING) -->
+<div class="filters">
+  <button onclick="filterPhotos('all')">All</button>
+  <button onclick="filterPhotos('nature')">Nature</button>
+  <button onclick="filterPhotos('culture')">Culture</button>
+</div>
+
+<!-- GALLERY START -->
 <main class="gallery-unique">
 
   <div class="photo-block" data-category="culture">
@@ -29,17 +37,14 @@
   </div>
 
 </main>
-
-
-</main>
-
-
-</main>
+<!-- GALLERY END -->
 
 <footer>
   © 2026 supsaf.in – Free to use
 </footer>
-  <script>
+
+<!-- FILTER SCRIPT -->
+<script>
 function filterPhotos(category) {
   const photos = document.querySelectorAll('.photo-block');
   photos.forEach(photo => {
@@ -52,11 +57,5 @@ function filterPhotos(category) {
 }
 </script>
 
-
 </body>
 </html>
-
-
-
-
-
