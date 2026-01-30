@@ -39,9 +39,23 @@
 <footer>
   © 2026 supsaf.in – Free to use
 </footer>
+  <script>
+function filterPhotos(category) {
+  const photos = document.querySelectorAll('.photo-block');
+  photos.forEach(photo => {
+    if (category === 'all' || photo.dataset.category === category) {
+      photo.style.display = 'block';
+    } else {
+      photo.style.display = 'none';
+    }
+  });
+}
+</script>
+
 
 </body>
 </html>
+
 
 
 
