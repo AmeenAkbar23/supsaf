@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -6,6 +6,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<!-- HERO SECTION (ADDED) -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>SupSaf</h1>
+    <p>Stories captured. Free for everyone.</p>
+    <a href="#gallery" class="hero-btn">Explore Photos</a>
+  </div>
+</section>
 
 <header>
   <h1>supsaf</h1>
@@ -20,7 +29,7 @@
 </div>
 
 <!-- GALLERY -->
-<main class="gallery-unique">
+<main id="gallery" class="gallery-unique">
 
   <div class="photo-block" data-category="culture">
     <img src="photos/supsaf-tV8U7ckDvMw-unsplash.jpg">
@@ -42,18 +51,16 @@
   © 2026 supsaf.in – Free to use
 </footer>
 
-<!-- ✅ ANIMATED FILTER SCRIPT (ADDED HERE) -->
+<!-- ANIMATED FILTER SCRIPT -->
 <script>
 function filterPhotos(category) {
   const photos = document.querySelectorAll('.photo-block');
 
-  // hide all first
   photos.forEach(photo => {
     photo.style.display = 'none';
     photo.style.opacity = 0;
   });
 
-  // show matching with animation
   setTimeout(() => {
     photos.forEach(photo => {
       if (category === 'all' || photo.dataset.category === category) {
@@ -67,4 +74,3 @@ function filterPhotos(category) {
 
 </body>
 </html>
-
