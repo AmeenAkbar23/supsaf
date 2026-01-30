@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -12,14 +12,14 @@
   <p>Free stock photos for creators</p>
 </header>
 
-<!-- FILTER BUTTONS (THIS WAS MISSING) -->
+<!-- FILTER BUTTONS -->
 <div class="filters">
   <button onclick="filterPhotos('all')">All</button>
   <button onclick="filterPhotos('nature')">Nature</button>
   <button onclick="filterPhotos('culture')">Culture</button>
 </div>
 
-<!-- GALLERY START -->
+<!-- GALLERY -->
 <main class="gallery-unique">
 
   <div class="photo-block" data-category="culture">
@@ -37,25 +37,34 @@
   </div>
 
 </main>
-<!-- GALLERY END -->
 
 <footer>
   © 2026 supsaf.in – Free to use
 </footer>
 
-<!-- FILTER SCRIPT -->
+<!-- ✅ ANIMATED FILTER SCRIPT (ADDED HERE) -->
 <script>
 function filterPhotos(category) {
   const photos = document.querySelectorAll('.photo-block');
+
+  // hide all first
   photos.forEach(photo => {
-    if (category === 'all' || photo.dataset.category === category) {
-      photo.style.display = 'block';
-    } else {
-      photo.style.display = 'none';
-    }
+    photo.style.display = 'none';
+    photo.style.opacity = 0;
   });
+
+  // show matching with animation
+  setTimeout(() => {
+    photos.forEach(photo => {
+      if (category === 'all' || photo.dataset.category === category) {
+        photo.style.display = 'block';
+        photo.style.animation = 'fadeIn 0.6s ease forwards';
+      }
+    });
+  }, 100);
 }
 </script>
 
 </body>
 </html>
+
