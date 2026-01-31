@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
 
 html {
@@ -12,84 +12,81 @@ html {
 
 body {
   background: #0b0b0b;
-  color: #f5f5f5;
+  color: #ffffff;
   line-height: 1.6;
 }
 
-/* 🔒 FORCE REMOVE BLUE LINKS (GLOBAL FIX) */
-a,
-a:visited,
-a:hover,
-a:active {
-  color: #ffffff !important;
-  text-decoration: none !important;
-}
-
-/* ================= HERO ================= */
-.hero {
-  min-height: 100vh;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.4), rgba(0,0,0,.9)),
-    url("photos/supsaf-tV8U7ckDvMw-unsplash.jpg") center/cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.hero-content h1 {
-  font-size: 4.5rem;
-  letter-spacing: 6px;
-  font-weight: 800;
-}
-
-.hero-content p {
-  margin: 20px 0 40px;
-  color: #ccc;
-  font-size: 1.1rem;
-}
-
-.hero-btn {
-  padding: 14px 40px;
-  border-radius: 40px;
-  background: white;
-  color: black !important;
-  font-weight: 700;
-  transition: 0.3s ease;
-}
-
-.hero-btn:hover {
-  transform: scale(1.06);
-  background: #eee;
+/* ================= LINKS ================= */
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 /* ================= HEADER ================= */
 header {
   position: sticky;
   top: 0;
+  z-index: 999;
+  backdrop-filter: blur(12px);
   background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(10px);
-  text-align: center;
-  padding: 25px 20px;
-  z-index: 100;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: center;
 }
 
-header h1 a {
-  font-size: 1.8rem;
+.logo {
+  font-size: 1.6rem;
   letter-spacing: 4px;
-  font-weight: 800;
-  color: #fff !important;
-  text-transform: lowercase;
+  font-weight: 700;
+  color: #fff;
 }
 
-header h1 a:hover {
-  opacity: 0.8;
+/* ================= HERO ================= */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.4), rgba(0,0,0,.9)),
+    url("photos/supsaf-tV8U7ckDvMw-unsplash.jpg") center/cover no-repeat;
+}
+
+.hero-content h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: 6px;
+  font-weight: 800;
+}
+
+.hero-content p {
+  margin: 20px auto 40px;
+  max-width: 600px;
+  color: #ccc;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+}
+
+.hero-btn {
+  padding: 14px 40px;
+  border-radius: 40px;
+  background: #fff;
+  color: #000;
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+.hero-btn:hover {
+  transform: scale(1.06);
 }
 
 /* ================= FILTERS ================= */
 .filters {
-  text-align: center;
-  margin: 40px 0 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px 10px;
 }
 
 .filters button {
@@ -98,48 +95,45 @@ header h1 a:hover {
   color: #fff;
   padding: 8px 22px;
   border-radius: 30px;
-  margin: 6px;
   cursor: pointer;
-  transition: 0.25s ease;
+  transition: 0.3s;
 }
 
 .filters button:hover {
-  background: white;
-  color: black;
+  background: #fff;
+  color: #000;
 }
 
 /* ================= GALLERY ================= */
 .gallery-unique {
   max-width: 1200px;
   margin: auto;
-  padding: 50px 20px 80px;
+  padding: 40px 20px 80px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
 }
 
 /* ================= CARD ================= */
 .photo-block {
   background: #151515;
-  border-radius: 20px;
+  border-radius: 18px;
   overflow: hidden;
   transition: 0.35s ease;
-  animation: fadeUp 0.7s ease forwards;
-  position: relative;
 }
 
 .photo-block:hover {
-  transform: translateY(-10px);
+  transform: translateY(-8px);
 }
 
 .photo-block img {
   width: 100%;
-  height: 260px;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
 }
 
 .caption {
-  padding: 15px;
+  padding: 14px;
   font-size: 0.9rem;
   color: #ccc;
 }
@@ -152,122 +146,36 @@ header h1 a:hover {
   padding: 5px 14px;
   border-radius: 20px;
   font-size: 11px;
-  letter-spacing: 1px;
 }
 
 .photo-block a {
   display: block;
   text-align: center;
   padding: 14px;
-  background: white;
-  color: black !important;
+  background: #fff;
+  color: #000;
   font-weight: 700;
-}
-
-.photo-block a:hover {
-  background: #eee;
 }
 
 /* ================= FOOTER ================= */
 footer {
   text-align: center;
   padding: 50px 20px;
-  font-size: 0.85rem;
   color: #777;
   border-top: 1px solid #222;
 }
 
-/* ================= ANIMATION ================= */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* ================= MOBILE ================= */
-@media (max-width: 600px) {
-  .hero-content h1 {
-    font-size: 2.6rem;
-    letter-spacing: 3px;
+@media (max-width: 480px) {
+  header {
+    padding: 14px;
   }
 
-  header h1 a {
-    font-size: 1.4rem;
+  .logo {
+    font-size: 1.3rem;
   }
-}
-/* ================= LOGIN PAGE ================= */
-.login-page {
-  min-height: 100vh;
-  background:
-    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)),
-    url("photos/supsaf-tV8U7ckDvMw-unsplash.jpg") center/cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.login-box {
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(12px);
-  padding: 50px 40px;
-  border-radius: 24px;
-  width: 100%;
-  max-width: 360px;
-  text-align: center;
-  animation: fadeUp 0.6s ease forwards;
-}
-
-.login-box h1 {
-  letter-spacing: 4px;
-  margin-bottom: 10px;
-}
-
-.login-box p {
-  color: #bbb;
-  margin-bottom: 30px;
-}
-
-.login-box input {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 15px;
-  border-radius: 12px;
-  border: none;
-  background: #111;
-  color: white;
-  font-size: 0.95rem;
-}
-
-.login-box input:focus {
-  outline: 2px solid white;
-}
-
-.login-box button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  border: none;
-  background: white;
-  color: black;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.login-box button:hover {
-  background: #eee;
-}
-
-.login-links {
-  margin-top: 20px;
-  font-size: 0.85rem;
-  color: #aaa;
-}
-
-.login-links a:hover {
-  text-decoration: underline;
+  .hero {
+    padding: 20px;
+  }
 }
