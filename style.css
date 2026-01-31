@@ -16,9 +16,13 @@ body {
   line-height: 1.6;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
+/* 🔒 FORCE REMOVE BLUE LINKS (GLOBAL FIX) */
+a,
+a:visited,
+a:hover,
+a:active {
+  color: #ffffff !important;
+  text-decoration: none !important;
 }
 
 /* ================= HERO ================= */
@@ -37,7 +41,6 @@ a {
   font-size: 4.5rem;
   letter-spacing: 6px;
   font-weight: 800;
-  color: #fff;
 }
 
 .hero-content p {
@@ -50,7 +53,7 @@ a {
   padding: 14px 40px;
   border-radius: 40px;
   background: white;
-  color: black;
+  color: black !important;
   font-weight: 700;
   transition: 0.3s ease;
 }
@@ -71,26 +74,16 @@ header {
   z-index: 100;
 }
 
-/* ✅ FIXED LOGO LINK (NO BLUE ANYMORE) */
 header h1 a {
   font-size: 1.8rem;
   letter-spacing: 4px;
-  font-weight: 700;
-  color: #fff;
-  text-decoration: none;
-}
-
-header h1 a:visited {
-  color: #fff;
+  font-weight: 800;
+  color: #fff !important;
+  text-transform: lowercase;
 }
 
 header h1 a:hover {
-  color: #ddd;
-}
-
-header p {
-  font-size: 0.85rem;
-  color: #aaa;
+  opacity: 0.8;
 }
 
 /* ================= FILTERS ================= */
@@ -167,7 +160,7 @@ header p {
   text-align: center;
   padding: 14px;
   background: white;
-  color: black;
+  color: black !important;
   font-weight: 700;
 }
 
@@ -206,9 +199,4 @@ footer {
   header h1 a {
     font-size: 1.4rem;
   }
-}
-/* FORCE REMOVE BLUE LINK COLOR */
-a, a:visited, a:hover, a:active {
-  color: #ffffff !important;
-  text-decoration: none !important;
 }
