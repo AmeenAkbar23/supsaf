@@ -1,31 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>supsaf – Free Stock Photos</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>supsaf – Under Working</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #0b0b0b;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .box {
+      max-width: 500px;
+      padding: 40px 20px;
+      animation: fadeIn 1s ease;
+    }
+
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 4px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: #ccc;
+      font-size: 1rem;
+      margin-bottom: 30px;
+    }
+
+    .small {
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
-<!-- ================= HEADER ================= -->
-<header>
-  <h1><a href="index.html" class="logo">supsaf</a></h1>
-</header>
-
-<!-- ================= HERO ================= -->
-<section class="hero">
-  <div class="hero-content">
+  <div class="box">
     <h1>supsaf</h1>
-    <p>Stories captured. Free for everyone.</p>
-    <a href="explore.html" class="hero-btn">Explore Photos</a>
+    <p>We are building something beautiful for creators.</p>
+    <p class="small">Under working · Coming soon</p>
   </div>
-</section>
-
-<!-- ================= FOOTER ================= -->
-<footer>
-  © 2026 supsaf.in – Free to use
-</footer>
 
 </body>
 </html>
