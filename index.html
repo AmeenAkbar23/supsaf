@@ -1,36 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>supsaf – Free Stock Photos</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>supsaf – Coming Soon</title>
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="logo.png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Helvetica, Arial, sans-serif;
+    }
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+    body {
+      min-height: 100vh;
+      background: #0b0b0b;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .box {
+      max-width: 520px;
+      padding: 40px 20px;
+      animation: fadeIn 1s ease;
+    }
+
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 4px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: #ccc;
+      font-size: 1rem;
+      margin-bottom: 25px;
+    }
+
+    /* ===== TIMER ===== */
+    .timer {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .time-box {
+      background: #151515;
+      padding: 14px 16px;
+      border-radius: 12px;
+      min-width: 70px;
+    }
+
+    .time-box span {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .time-box small {
+      font-size: 0.7rem;
+      color: #aaa;
+    }
+
+    /* ===== NOTIFY SWITCH ===== */
+    .notify {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 30px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #333;
+      transition: .4s;
+      border-radius: 30px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      bottom: 4px;
+      background: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background: #00ffb3;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(30px);
+    }
+
+    /* ===== EMAIL INPUT ===== */
+    .email-box {
+      margin-top: 20px;
+      display: none;
+    }
+
+    .email-box input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: #111;
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    .email-box button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: white;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .email-box button:hover {
+      background: #eee;
+    }
+
+    .success {
+      color: #00ffb3;
+      margin-top: 10px;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 500px) {
+      h1 { font-size: 2.2rem; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- ================= HEADER ================= -->
-<header class="main-header">
-  <a href="index.html" class="logo">supsaf</a>
-</header>
+<div class="box">
+  <h1>supsaf</h1>
+  <p>We are building something beautiful for creators.</p>
 
-<!-- ================= HERO ================= -->
-<section class="hero">
-  <div class="hero-content">
-    <h1>supsaf</h1>
-    <p>Open source platform for sharing photos</p>
-    <a href="explore.html" class="hero-btn">Explore Photos</a>
+  <!-- TIMER -->
+  <div class="timer">
+    <div class="time-box"><span id="days">00</span><small>DAYS</small></div>
+    <div class="time-box"><span id="hours">00</span><small>HOURS</small></div>
+    <div class="time-box"><span id="minutes">00</span><small>MINUTES</small></div>
+    <div class="time-box"><span id="seconds">00</span><small>SECONDS</small></div>
   </div>
-</section>
 
-<!-- ================= FOOTER ================= -->
-<footer>
-  © 2026 supsaf.in – Open source • Free for everyone
-</footer>
+  <!-- NOTIFY SWITCH -->
+  <div class="notify">
+    <p>Notify me when it’s live</p>
+    <label class="switch">
+      <input type="checkbox" id="notifySwitch">
+      <span class="slider"></span>
+    </label>
+
+    <div class="email-box" id="emailBox">
+      <input type="email" id="email" placeholder="Enter your email">
+      <button onclick="saveEmail()">Notify Me</button>
+      <div class="success" id="success">You will be notified 🎉</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ===== COUNTDOWN ===== */
+  const launchDate = new Date("2026-02-04T00:00:00").getTime();
+
+  setInterval(() => {
+    const now = new Date().getTime();
+    const d = launchDate - now;
+
+    if (d < 0) return;
+
+    days.innerText = Math.floor(d / (1000 * 60 * 60 * 24));
+    hours.innerText = Math.floor((d / (1000 * 60 * 60)) % 24);
+    minutes.innerText = Math.floor((d / (1000 * 60)) % 60);
+    seconds.innerText = Math.floor((d / 1000) % 60);
+  }, 1000);
+
+  /* ===== SWITCH ===== */
+  const toggle = document.getElementById("notifySwitch");
+  const emailBox = document.getElementById("emailBox");
+
+  toggle.addEventListener("change", () => {
+    emailBox.style.display = toggle.checked ? "block" : "none";
+  });
+
+  /* ===== SAVE EMAIL ===== */
+  function saveEmail() {
+    const email = document.getElementById("email").value;
+    if (!email) return alert("Enter email");
+
+    localStorage.setItem("supsaf_notify", email);
+    document.getElementById("success").style.display = "block";
+  }
+</script>
 
 </body>
 </html>
