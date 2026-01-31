@@ -7,71 +7,13 @@
 </head>
 <body>
 
-<!-- HERO SECTION (ADDED) -->
 <section class="hero">
   <div class="hero-content">
     <h1>supsaf</h1>
     <p>Stories captured. Free for everyone.</p>
-    <a href="#gallery" class="hero-btn">Explore Photos</a>
+    <a href="explore.html" class="hero-btn">Explore Photos</a>
   </div>
 </section>
 
-<header>
-  <h1>supsaf</h1>
-  <p>Free stock photos for creators</p>
-</header>
-
-<!-- FILTER BUTTONS -->
-<div class="filters">
-  <button onclick="filterPhotos('all')">All</button>
-  <button onclick="filterPhotos('nature')">Nature</button>
-  <button onclick="filterPhotos('culture')">Culture</button>
-</div>
-
-<!-- GALLERY -->
-<main id="gallery" class="gallery-unique">
-
-  <div class="photo-block" data-category="culture">
-    <img src="photos/supsaf-tV8U7ckDvMw-unsplash.jpg">
-    <div class="caption">Festival lights lighting up a village night</div>
-    <span class="tag">Culture</span>
-    <a download href="photos/supsaf-tV8U7ckDvMw-unsplash.jpg">Download</a>
-  </div>
-
-  <div class="photo-block" data-category="nature">
-    <img src="photos/supsaf-NmN7LD8890s-unsplash.jpg">
-    <div class="caption">Wild flowers growing freely after rain</div>
-    <span class="tag">Nature</span>
-    <a download href="photos/supsaf-NmN7LD8890s-unsplash.jpg">Download</a>
-  </div>
-
-</main>
-
-<footer>
-  © 2026 supsaf.in – Free to use
-</footer>
-
-<!-- ANIMATED FILTER SCRIPT -->
-<script>
-function filterPhotos(category) {
-  const photos = document.querySelectorAll('.photo-block');
-
-  photos.forEach(photo => {
-    photo.style.display = 'none';
-    photo.style.opacity = 0;
-  });
-
-  setTimeout(() => {
-    photos.forEach(photo => {
-      if (category === 'all' || photo.dataset.category === category) {
-        photo.style.display = 'block';
-        photo.style.animation = 'fadeIn 0.6s ease forwards';
-      }
-    });
-  }, 100);
-}
-</script>
-
 </body>
 </html>
-
