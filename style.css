@@ -1,100 +1,169 @@
-/* ===== RESET ===== */
+/* ========== RESET ========== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 body {
   background: #0b0b0b;
-  color: #ffffff;
-  overflow-x: hidden;
+  color: #fff;
+  min-height: 100vh;
 }
 
-/* ===== HEADER ===== */
-.main-header {
+/* ========== HEADER ========== */
+.top-header {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 20px;
-  text-align: center;
-  z-index: 10;
-  background: rgba(0,0,0,0.4);
+  padding: 15px 20px;
+  background: rgba(0,0,0,0.8);
   backdrop-filter: blur(10px);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.logo {
-  font-size: 1.6rem;
-  letter-spacing: 4px;
-  font-weight: 700;
+.logo-container {
+  display: flex;
+  align-items: center;
   text-decoration: none;
-  color: #ffffff;
+  gap: 12px;
 }
 
-/* ===== HERO ===== */
+.header-logo {
+  height: 35px;
+  border-radius: 4px;
+}
+
+.logo-text {
+  color: #fff;
+  font-size: 1.2rem;
+  letter-spacing: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* ========== HERO ========== */
 .hero {
   height: 100vh;
-  background:
-    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)),
-    url("photos/supsaf-tV8U7ckDvMw-unsplash.jpg") center/cover no-repeat;
-
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 20px;
+  background: #000;
 }
 
 .hero-content h1 {
-  font-size: 4rem;
-  letter-spacing: 6px;
+  font-size: 4.5rem;
   font-weight: 800;
-  margin-bottom: 20px;
+  letter-spacing: 8px;
 }
 
 .hero-content p {
-  color: #ccc;
-  margin-bottom: 40px;
-  font-size: 1.1rem;
+  margin: 20px 0 60px; /* Space for the button */
+  color: #aaa;
+  font-size: 1.2rem;
 }
 
 .hero-btn {
-  padding: 14px 40px;
-  background: white;
-  color: black;
-  border-radius: 40px;
+  display: inline-block;
+  padding: 18px 50px;
+  border-radius: 50px;
+  background: #fff;
+  color: #000;
   font-weight: 700;
   text-decoration: none;
   transition: 0.3s ease;
 }
 
 .hero-btn:hover {
+  background: #e23122; /* Your brand red */
+  color: #fff;
   transform: scale(1.05);
-  background: #eee;
 }
 
-/* ===== FOOTER ===== */
+/* ========== GALLERY GRID ========== */
+.explore-wrapper {
+  padding: 120px 20px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.filters {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.filters button {
+  background: transparent;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 10px 25px;
+  margin: 5px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.filters button:hover {
+  background: #e23122;
+  border-color: #e23122;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.card {
+  background: #111;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 1px solid #222;
+}
+
+.card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-body p {
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+.card-body span {
+  display: block;
+  font-size: 0.7rem;
+  color: #e23122;
+  text-transform: uppercase;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+.card-body a {
+  text-decoration: none;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 8px 15px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+/* ========== FOOTER ========== */
 footer {
   text-align: center;
-  padding: 30px;
-  font-size: 0.85rem;
-  color: #777;
-  background: #000;
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 600px) {
-  .hero-content h1 {
-    font-size: 2.6rem;
-    letter-spacing: 3px;
-  }
-
-  .hero-content p {
-    font-size: 1rem;
-  }
-
-  .logo {
-    font-size: 1.3rem;
-  }
+  padding: 40px;
+  color: #555;
+  font-size: 0.8rem;
 }
