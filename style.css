@@ -207,3 +207,8 @@ footer {
     font-size: 1.4rem;
   }
 }
+/* FORCE REMOVE BLUE LINK COLOR */
+a, a:visited, a:hover, a:active {
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
