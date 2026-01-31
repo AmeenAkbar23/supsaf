@@ -1,35 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Explore – supsaf</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>supsaf – Free Stock Photos</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header class="top-header">
-  <h1>
-    <a href="index.html" class="logo">supsaf</a>
-  </h1>
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>supsaf</h1>
+    <p>Stories captured. Free for everyone.</p>
+    <a href="#gallery" class="hero-btn">Explore Photos</a>
+  </div>
+</section>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <h1><a href="index.html" class="logo">supsaf</a></h1>
+  <p>Free stock photos for creators</p>
 </header>
 
+<!-- ================= FILTERS ================= -->
 <div class="filters">
   <button onclick="filterPhotos('all')">All</button>
   <button onclick="filterPhotos('nature')">Nature</button>
   <button onclick="filterPhotos('culture')">Culture</button>
 </div>
 
-<main class="gallery-unique">
+<!-- ================= GALLERY ================= -->
+<main id="gallery" class="gallery-unique">
 
   <div class="photo-block" data-category="culture">
-    <img src="photos/supsaf-tV8U7ckDvMw-unsplash.jpg" onclick="openViewer(this.src)">
+    <img src="photos/supsaf-tV8U7ckDvMw-unsplash.jpg" onclick="openViewer(this.src)" />
     <div class="caption">Festival lights lighting up a village night</div>
     <span class="tag">Culture</span>
     <a download href="photos/supsaf-tV8U7ckDvMw-unsplash.jpg">Download</a>
   </div>
 
   <div class="photo-block" data-category="nature">
-    <img src="photos/supsaf-NmN7LD8890s-unsplash.jpg" onclick="openViewer(this.src)">
+    <img src="photos/supsaf-NmN7LD8890s-unsplash.jpg" onclick="openViewer(this.src)" />
     <div class="caption">Wild flowers growing freely after rain</div>
     <span class="tag">Nature</span>
     <a download href="photos/supsaf-NmN7LD8890s-unsplash.jpg">Download</a>
@@ -37,42 +49,47 @@
 
 </main>
 
-<!-- FULLSCREEN VIEWER -->
+<!-- ================= FULLSCREEN VIEWER ================= -->
 <div id="viewer" class="viewer" onclick="closeViewer()">
-  <img id="viewer-img">
+  <img id="viewer-img" />
 </div>
 
+<!-- ================= FOOTER ================= -->
 <footer>
   © 2026 supsaf.in – Free to use
 </footer>
 
+<!-- ================= JS ================= -->
 <script>
 function filterPhotos(category) {
-  const photos = document.querySelectorAll('.photo-block');
-
+  const photos = document.querySelectorAll(".photo-block");
   photos.forEach(photo => {
-    photo.style.display = 'none';
-    photo.style.opacity = 0;
+    photo.style.display = "none";
   });
 
   setTimeout(() => {
     photos.forEach(photo => {
-      if (category === 'all' || photo.dataset.category === category) {
-        photo.style.display = 'block';
-        photo.style.animation = 'fadeIn 0.6s ease forwards';
+      if (category === "all" || photo.dataset.category === category) {
+        photo.style.display = "block";
       }
     });
   }, 100);
 }
 
 function openViewer(src) {
-  document.getElementById("viewer").style.display = "flex";
-  document.getElementById("viewer-img").src = src;
+  const viewer = document.getElementById("viewer");
+  const img = document.getElementById("viewer-img");
+  img.src = src;
+  viewer.classList.add("show");
 }
 
 function closeViewer() {
-  document.getElementById("viewer").style.display = "none";
+  document.getElementById("viewer").classList.remove("show");
 }
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeViewer();
+});
 </script>
 
 </body>
