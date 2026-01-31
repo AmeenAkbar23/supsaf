@@ -1,95 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>supsaf – Free Stock Photos</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore – supsaf</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ================= HERO ================= -->
-<section class="hero">
-  <div class="hero-content">
-    <h1>supsaf</h1>
-    <p>Stories captured. Free for everyone.</p>
-    <a href="#gallery" class="hero-btn">Explore Photos</a>
-  </div>
-</section>
-
-<!-- ================= HEADER ================= -->
-<header>
-  <h1><a href="index.html" class="logo">supsaf</a></h1>
-  <p>Free stock photos for creators</p>
+<header class="top-header">
+  <a href="index.html" class="logo-container">
+    <span class="logo-text">supsaf</span>
+  </a>
 </header>
 
-<!-- ================= FILTERS ================= -->
-<div class="filters">
-  <button onclick="filterPhotos('all')">All</button>
-  <button onclick="filterPhotos('nature')">Nature</button>
-  <button onclick="filterPhotos('culture')">Culture</button>
-</div>
+<section class="explore-wrapper">
 
-<!-- ================= GALLERY ================= -->
-<main id="gallery" class="gallery-unique">
-
-  <div class="photo-block" data-category="culture">
-    <img src="photos/supsaf-tV8U7ckDvMw-unsplash.jpg" onclick="openViewer(this.src)" />
-    <div class="caption">Festival lights lighting up a village night</div>
-    <span class="tag">Culture</span>
-    <a download href="photos/supsaf-tV8U7ckDvMw-unsplash.jpg">Download</a>
+  <div class="filters">
+    <button onclick="filterPhotos('all')">All</button>
+    <button onclick="filterPhotos('nature')">Nature</button>
+    <button onclick="filterPhotos('culture')">Culture</button>
   </div>
 
-  <div class="photo-block" data-category="nature">
-    <img src="photos/supsaf-NmN7LD8890s-unsplash.jpg" onclick="openViewer(this.src)" />
-    <div class="caption">Wild flowers growing freely after rain</div>
-    <span class="tag">Nature</span>
-    <a download href="photos/supsaf-NmN7LD8890s-unsplash.jpg">Download</a>
+  <div class="gallery">
+    <div class="card" data-category="nature">
+      <img src="photos/supsap2.jpeg" alt="Purple globe amaranth">
+      <div class="card-body">
+        <p>Purple globe amarhart in the dry season</p>
+        <span>Nature</span>
+        <a download href="photos/supsap2.jpeg">Download</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="nature">
+      <img src="photos/supsap7.jpg" alt="Nature Photo">
+      <div class="card-body">
+        <p>Morning mist in the mountains</p>
+        <span>Nature</span>
+        <a download href="photos/supsap7.jpg">Download</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="culture">
+      <img src="photos/supsap5.jpg" alt="Culture Photo">
+      <div class="card-body">
+        <p>Festival lights lighting up a village night</p>
+        <span>Culture</span>
+        <a download href="photos/supsap5.jpg">Download</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="culture">
+      <img src="photos/supsap6.jpg" alt="Traditional art">
+      <div class="card-body">
+        <p>Traditional art festival moment</p>
+        <span>Culture</span>
+        <a download href="photos/supsap6.jpg">Download</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="nature">
+      <img src="photos/supsap4.jpg" alt="Palm Tree">
+      <div class="card-body">
+        <p>Sky, palm tree and freedom</p>
+        <span>Nature</span>
+        <a download href="photos/supsap4.jpg">Download</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="nature">
+      <img src="photos/supsap1.jpg" alt="Wild Flowers">
+      <div class="card-body">
+        <p>Wild flowers growing freely after rain</p>
+        <span>Nature</span>
+        <a download href="photos/supsap1.jpg">Download</a>
+      </div>
+    </div>
+
+    <div class="card" data-category="culture">
+      <img src="photos/supsap3.jpg" alt="Festival Night">
+      <div class="card-body">
+        <p>Festival lights lighting up a village night</p>
+        <span>Culture</span>
+        <a download href="photos/supsap3.jpg">Download</a>
+      </div>
+    </div>
   </div>
 
-</main>
+</section>
 
-<!-- ================= FULLSCREEN VIEWER ================= -->
-<div id="viewer" class="viewer" onclick="closeViewer()">
-  <img id="viewer-img" />
-</div>
-
-<!-- ================= FOOTER ================= -->
 <footer>
   © 2026 supsaf.in – Free to use
 </footer>
 
-<!-- ================= JS ================= -->
 <script>
-function filterPhotos(category) {
-  const photos = document.querySelectorAll(".photo-block");
-  photos.forEach(photo => {
-    photo.style.display = "none";
-  });
-
-  setTimeout(() => {
-    photos.forEach(photo => {
-      if (category === "all" || photo.dataset.category === category) {
-        photo.style.display = "block";
+  function filterPhotos(category) {
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      if (category === 'all' || card.getAttribute('data-category') === category) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
       }
     });
-  }, 100);
-}
-
-function openViewer(src) {
-  const viewer = document.getElementById("viewer");
-  const img = document.getElementById("viewer-img");
-  img.src = src;
-  viewer.classList.add("show");
-}
-
-function closeViewer() {
-  document.getElementById("viewer").classList.remove("show");
-}
-
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") closeViewer();
-});
+  }
 </script>
 
 </body>
