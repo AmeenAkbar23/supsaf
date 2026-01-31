@@ -7,8 +7,10 @@
 </head>
 <body>
 
-<header>
-  <h1><a href="index.html" class="logo">supsaf</a></h1>
+<header class="top-header">
+  <h1>
+    <a href="index.html" class="logo">supsaf</a>
+  </h1>
 </header>
 
 <div class="filters">
@@ -32,12 +34,13 @@
     <span class="tag">Nature</span>
     <a download href="photos/supsaf-NmN7LD8890s-unsplash.jpg">Download</a>
   </div>
-  <!-- FULLSCREEN VIEWER -->
+
+</main>
+
+<!-- FULLSCREEN VIEWER -->
 <div id="viewer" class="viewer" onclick="closeViewer()">
   <img id="viewer-img">
 </div>
-
-</main>
 
 <footer>
   © 2026 supsaf.in – Free to use
@@ -60,6 +63,15 @@ function filterPhotos(category) {
       }
     });
   }, 100);
+}
+
+function openViewer(src) {
+  document.getElementById("viewer").style.display = "flex";
+  document.getElementById("viewer-img").src = src;
+}
+
+function closeViewer() {
+  document.getElementById("viewer").style.display = "none";
 }
 </script>
 
