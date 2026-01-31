@@ -1,4 +1,4 @@
-/* ===== GLOBAL ===== *//* ===== GLOBAL ===== */
+/* ================= RESET ================= */
 * {
   margin: 0;
   padding: 0;
@@ -6,8 +6,12 @@
   font-family: "Inter", system-ui, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: #0e0e0e;
+  background: #0b0b0b;
   color: #f5f5f5;
   line-height: 1.6;
 }
@@ -17,11 +21,11 @@ a {
   color: inherit;
 }
 
-/* ===== HERO SECTION ===== */
+/* ================= HERO ================= */
 .hero {
-  height: 100vh;
+  min-height: 100vh;
   background:
-    linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.9)),
+    linear-gradient(180deg, rgba(0,0,0,.4), rgba(0,0,0,.9)),
     url("photos/supsaf-tV8U7ckDvMw-unsplash.jpg") center/cover no-repeat;
   display: flex;
   align-items: center;
@@ -30,91 +34,100 @@ a {
 }
 
 .hero-content h1 {
-  font-size: 4rem;
+  font-size: 4.5rem;
   letter-spacing: 6px;
-  color: #fff;
+  font-weight: 800;
 }
 
 .hero-content p {
-  color: #ccc;
   margin: 20px 0 40px;
+  color: #ccc;
   font-size: 1.1rem;
 }
 
 .hero-btn {
-  padding: 14px 36px;
+  padding: 14px 40px;
+  border-radius: 40px;
   background: white;
   color: black;
-  border-radius: 40px;
-  font-weight: bold;
+  font-weight: 700;
   transition: 0.3s ease;
 }
 
 .hero-btn:hover {
-  transform: scale(1.05);
+  transform: scale(1.06);
   background: #eee;
 }
 
-/* ===== HEADER ===== */
+/* ================= HEADER ================= */
 header {
+  position: sticky;
+  top: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
   text-align: center;
-  padding: 60px 20px 20px;
+  padding: 25px 20px;
+  z-index: 100;
 }
 
-header h1 {
-  font-size: 2.4rem;
+header h1 a {
+  font-size: 1.8rem;
   letter-spacing: 4px;
+  font-weight: 700;
+}
+
+header h1 a:hover {
+  opacity: 0.7;
 }
 
 header p {
+  font-size: 0.85rem;
   color: #aaa;
-  margin-top: 10px;
 }
 
-/* ===== FILTER BUTTONS ===== */
+/* ================= FILTERS ================= */
 .filters {
   text-align: center;
-  margin: 40px 0;
+  margin: 40px 0 10px;
 }
 
 .filters button {
+  border: 1px solid #333;
   background: transparent;
   color: #fff;
-  border: 1px solid #333;
-  margin: 6px;
   padding: 8px 22px;
   border-radius: 30px;
+  margin: 6px;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: 0.25s ease;
 }
 
 .filters button:hover {
-  background: #fff;
-  color: #000;
+  background: white;
+  color: black;
 }
 
-/* ===== GALLERY ===== */
+/* ================= GALLERY ================= */
 .gallery-unique {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: auto;
-  padding: 40px 20px;
+  padding: 50px 20px 80px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 30px;
 }
 
-/* ===== PHOTO CARD ===== */
+/* ================= CARD ================= */
 .photo-block {
   background: #151515;
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
-  position: relative;
-  animation: fadeIn 0.8s ease forwards;
-  transition: 0.4s ease;
+  transition: 0.35s ease;
+  animation: fadeUp 0.7s ease forwards;
 }
 
 .photo-block:hover {
-  transform: translateY(-8px);
+  transform: translateY(-10px);
 }
 
 .photo-block img {
@@ -124,17 +137,17 @@ header p {
 }
 
 .caption {
-  padding: 16px;
-  color: #ccc;
+  padding: 15px;
   font-size: 0.9rem;
+  color: #ccc;
 }
 
 .tag {
   position: absolute;
   top: 12px;
   left: 12px;
-  background: rgba(0,0,0,0.6);
-  padding: 4px 12px;
+  background: rgba(0,0,0,0.7);
+  padding: 5px 14px;
   border-radius: 20px;
   font-size: 11px;
   letter-spacing: 1px;
@@ -146,27 +159,27 @@ header p {
   padding: 14px;
   background: white;
   color: black;
-  font-weight: bold;
-  transition: 0.3s ease;
+  font-weight: 700;
 }
 
 .photo-block a:hover {
-  background: #eaeaea;
+  background: #eee;
 }
 
-/* ===== FOOTER ===== */
+/* ================= FOOTER ================= */
 footer {
   text-align: center;
   padding: 50px 20px;
+  font-size: 0.85rem;
   color: #777;
-  font-size: 0.9rem;
+  border-top: 1px solid #222;
 }
 
-/* ===== ANIMATION ===== */
-@keyframes fadeIn {
+/* ================= ANIMATION ================= */
+@keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(40px);
   }
   to {
     opacity: 1;
@@ -174,19 +187,14 @@ footer {
   }
 }
 
-/* ===== MOBILE POLISH ===== */
+/* ================= MOBILE ================= */
 @media (max-width: 600px) {
   .hero-content h1 {
-    font-size: 2.5rem;
+    font-size: 2.6rem;
     letter-spacing: 3px;
   }
 
-  .hero-content p {
-    font-size: 1rem;
-  }
-
-  .gallery-unique {
-    padding: 20px 15px;
+  header h1 a {
+    font-size: 1.4rem;
   }
 }
-
