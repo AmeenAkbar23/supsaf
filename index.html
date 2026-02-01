@@ -2,18 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>supsaf – Under Construction</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>supsaf - Open Source Photography</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+<body>
 
-<body class="under-page">
-
-  <div class="under-container">
-    <div class="under-image-box">
-      <img src="photos/under.jpg" alt="Under construction">
+  <div id="loading-overlay">
+    <div class="loader-content">
+      <img src="under.jpg" alt="Loading..." class="loader-img">
+      <p>Site is loading...</p>
     </div>
+  </div>
 
+  <header class="top-header">
+    <a href="index.html" class="logo-text">supsaf</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>supsaf</h1>
+      <p>Open source platform for sharing photos</p>
+      <a href="explore.html" class="hero-btn">Explore Photos</a>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 supsaf.in – Free to use
+  </footer>
+
+  <script>
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('loading-overlay');
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 500);
+      }, 1000); // Keeps loader visible for 1 second for a smooth transition
+    });
+  </script>
 
 </body>
 </html>
