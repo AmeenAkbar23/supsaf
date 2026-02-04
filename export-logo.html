@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Export supsaf logo</title>
+  <style>
+    body{font-family:Inter, system-ui, Arial; padding:24px;}
+    .preview{width:240px;height:240px;border-radius:12px;overflow:hidden;border:1px solid #eee;display:inline-block}
+    button{margin:8px;padding:10px 14px;border-radius:8px;border:0;background:#111;color:#fff;cursor:pointer}
+    input[type=number]{width:92px;padding:8px;margin-left:8px}
+  </style>
+</head>
+<body>
+  <h2>Export supsaf logo as PNG 🎯</h2>
+  <p>Open and use these buttons to download PNG versions suitable for Instagram (320, 512, 1080px).</p>
+
+  <!-- Inline SVG used for export -->
+  <div class="preview" id="preview">
+    <!-- Insert SVG markup here by script -->
+  </div>
+
+  <div style="margin-top:14px">
+    <label>Size (px): <input id="size" type="number" value="512" min="64" step="64"></label>
+    <button id="download">Download PNG</button>
+    <button id="download-1080">Download 1080px</button>
+    <a id="svg-link" download="supsaf-logo.svg" style="margin-left:12px">Download SVG</a>
+  </div>
+
+  <script>
+    const svgText = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1080 1080'>\n  <circle cx='540' cy='540' r='520' fill='#ff3b3b'/>\n  <path d='M220 460c120-160 440-160 560-60 120 100 40 340-140 380-200 44-520-40-420-320' fill='none' stroke='#fff' stroke-width='72' stroke-linecap='round' stroke-linejoin='round'/>\n</svg>`;
+
+    const preview = document.getElementById('preview');
+    preview.innerHTML = svgText;
+
+    // svg download link
+    const svgBlob = new Blob([svgText], {type: 'image/svg+xml'});
+    const svgUrl = URL.createObjectURL(svgBlob);
+    const svgLink = document.getElementById('svg-link');
+    svgLink.href = svgUrl;
+
+    function downloadPNG(size) {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = size; canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        // white background (Instagram profile usually shows on varied backgrounds)
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        // draw centered
+        const scale = size / 1080;
+        const w = 1080 * scale;
+        const h = 1080 * scale;
+        ctx.drawImage(img, (size - w)/2, (size-h)/2, w, h);
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = `supsaf-${size}.png`;
+        a.click();
+      };
+      img.onerror = () => alert('Could not render SVG for export in this browser');
+      img.src = svgUrl;
+    }
+
+    document.getElementById('download').addEventListener('click', ()=>{
+      const s = parseInt(document.getElementById('size').value,10) || 512;
+      downloadPNG(s);
+    });
+    document.getElementById('download-1080').addEventListener('click', ()=> downloadPNG(1080));
+  </script>
+</body>
+</html>
