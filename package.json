@@ -1,0 +1,11 @@
+{
+  "name": "supsaf-assets",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "gen-logos": "node scripts/generate-logos.js"
+  },
+  "dependencies": {
+    "sharp": "^0.32.0"
+  }
+}
