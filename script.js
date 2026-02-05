@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, onValue, runTransaction, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -62,6 +62,40 @@ document.addEventListener('DOMContentLoaded', () => {
           userAvatar.src = user.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
         }
       }
+
+      // Sync User Likes from Firebase
+      const userLikesRef = ref(db, 'users/' + user.uid + '/likes');
+      onValue(userLikesRef, (snapshot) => {
+        const cloudLikes = snapshot.val() || {};
+        const localLikes = JSON.parse(localStorage.getItem('supsafLikes')) || [];
+
+        // Merge Local into Cloud (if first time or missing)
+        localLikes.forEach(id => {
+          if (!cloudLikes[id]) {
+            cloudLikes[id] = true;
+          }
+        });
+
+        // Update LocalStorage to match Cloud (Cloud assumes truth)
+        const newLocalLikes = Object.keys(cloudLikes);
+        localStorage.setItem('supsafLikes', JSON.stringify(newLocalLikes));
+
+        // Refresh UI
+        newLocalLikes.forEach(id => {
+          document.querySelectorAll('.like-btn').forEach(btn => {
+            const card = btn.closest('.card, .hero-card');
+            const img = card ? card.querySelector('img') : null;
+            if (img && img.src.endsWith(id.replace(/_/g, '.'))) {
+              // Dirty fix for ID matching back to filename. 
+              // Better: Iterate cards and check ID match logic.
+              // Actually, let's just trigger a UI refresh function if we had one.
+              // For now, reload the visual states:
+              updateVisualState(btn, true);
+            }
+          });
+        });
+      });
+
     } else {
       // User is signed out
       if (loginBtn) loginBtn.style.display = 'block';
@@ -69,8 +103,64 @@ document.addEventListener('DOMContentLoaded', () => {
         userMenu.classList.add('hidden');
         userMenu.style.display = 'none';
       }
+      // Clear local personalization? No, keep it for guest mode.
     }
   });
+
+  // My Likes Page Logic
+  const myLikesLink = document.getElementById('my-likes-link');
+  const myLikesSection = document.getElementById('my-likes-section');
+  const myLikesGrid = document.getElementById('my-likes-grid');
+  const closeLikesBtn = document.getElementById('close-likes');
+
+  function renderMyLikes() {
+    myLikesGrid.innerHTML = ''; // clear
+    const likedIds = JSON.parse(localStorage.getItem('supsafLikes')) || [];
+
+    const allCards = document.querySelectorAll('.card');
+    let found = false;
+
+    allCards.forEach(card => {
+      const img = card.querySelector('img');
+      const src = img.src;
+      const id = src.split('/').pop();
+
+      if (likedIds.includes(id)) {
+        found = true;
+        const clone = card.cloneNode(true);
+        // Re-attach event listeners? basic clone doesn't copy listeners.
+        // We need to re-implement the click logic for cloned cards or just build new HTML.
+        // Easier: Just build HTML string or simpler clone.
+
+        clone.addEventListener('click', () => {
+          // Open original detail view logic (reused)
+          const originalCard = card;
+          originalCard.click(); // Trigger original card's click
+          myLikesSection.classList.add('hidden'); // Close likes view? Optional.
+        });
+
+        myLikesGrid.appendChild(clone);
+      }
+    });
+
+    if (!found) {
+      myLikesGrid.innerHTML = '<p style="color:white; text-align:center; width:100%;">No liked photos yet.</p>';
+    }
+  }
+
+  if (myLikesLink && myLikesSection) {
+    myLikesLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      renderMyLikes();
+      myLikesSection.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    });
+
+    closeLikesBtn.addEventListener('click', () => {
+      myLikesSection.classList.add('hidden');
+      document.body.style.overflow = '';
+    });
+  }
 
   const cards = document.querySelectorAll('.card');
   const detailView = document.getElementById('image-detail');
@@ -379,6 +469,13 @@ document.addEventListener('DOMContentLoaded', () => {
       e.stopPropagation();
       e.preventDefault();
 
+      // ENFORCE LOGIN
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        signInWithPopup(auth, provider).catch((err) => console.error(err));
+        return;
+      }
+
       // Check current local state
       const currentMyLikes = JSON.parse(localStorage.getItem('supsafLikes')) || [];
       const isLiked = currentMyLikes.includes(filename);
@@ -409,6 +506,16 @@ document.addEventListener('DOMContentLoaded', () => {
         currentMyLikes.push(filename);
       }
       localStorage.setItem('supsafLikes', JSON.stringify(currentMyLikes));
+
+      // NEW: Sync to Firebase User Profile if logged in
+      if (currentUser) {
+        const userLikeRef = ref(db, 'users/' + currentUser.uid + '/likes/' + dbId);
+        if (isLiked) { // was liked, now unliking
+          set(userLikeRef, null);
+        } else { // was not liked, now liking
+          set(userLikeRef, true);
+        }
+      }
     });
   });
 
@@ -447,6 +554,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     detailLikeBtn.addEventListener('click', () => {
       if (!detailImg.src) return;
+
+      // ENFORCE LOGIN
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        signInWithPopup(auth, provider).catch((err) => console.error(err));
+        return;
+      }
+
       const filename = detailImg.src.split('/').pop();
       const dbId = sanitizeId(filename);
       const countRef = ref(db, 'likes/' + dbId);
@@ -479,8 +594,16 @@ document.addEventListener('DOMContentLoaded', () => {
         currentMyLikes.push(filename);
       }
       localStorage.setItem('supsafLikes', JSON.stringify(currentMyLikes));
+
+      // NEW: Sync to Firebase User Profile if logged in
+      if (currentUser) {
+        const userLikeRef = ref(db, 'users/' + currentUser.uid + '/likes/' + dbId);
+        if (isLiked) { // was liked, now unliking
+          set(userLikeRef, null);
+        } else { // was not liked, now liking
+          set(userLikeRef, true);
+        }
+      }
     });
   }
 });
-
-

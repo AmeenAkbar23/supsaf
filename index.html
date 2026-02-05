@@ -33,6 +33,15 @@
                 <input type="search" placeholder="Search photos and illustrations..." aria-label="Search">
                 <button type="button" class="search-trigger" aria-label="Search"><i class="fas fa-search"></i></button>
             </div>
+
+            <div class="header-auth">
+                <button id="login-btn" class="nav-btn">Login</button>
+                <div id="user-menu" class="hidden">
+                    <img id="user-avatar" src="" alt="User" referrerpolicy="no-referrer">
+                    <a href="#mylikes" id="my-likes-link">My Likes</a>
+                    <button id="logout-btn">Logout</button>
+                </div>
+            </div>
         </header>
 
         <section class="filter-strip" role="navigation" aria-label="Photo categories">
@@ -46,11 +55,7 @@
             <a href="#sunset">Sunset</a>
             <a href="#beach">Beach</a>
             <div class="nav-links">
-                <button id="login-btn" class="nav-btn">Login</button>
-                <div id="user-menu" class="hidden">
-                    <img id="user-avatar" src="" alt="User" referrerpolicy="no-referrer">
-                    <button id="logout-btn">Logout</button>
-                </div>
+                <!-- Login was here, moving to top-bar -->
             </div>
         </section>
 
@@ -452,6 +457,17 @@
             <p>&copy; supsaf 2022</p>
         </footer>
     </div>
+
+    <section id="my-likes-section" class="hidden">
+        <div class="gallery-header">
+            <h2>My Liked Photos</h2>
+            <button id="close-likes"
+                style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <div class="masonry-grid" id="my-likes-grid">
+            <!-- Liked photos will be cloned here -->
+        </div>
+    </section>
 
     <section id="image-detail" class="detail-view">
         <div class="detail-container">
