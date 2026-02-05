@@ -1,3 +1,21 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA8cKsh5a-6CJ0JgsPhTFw7I0P_XE02yuQ",
+  authDomain: "supsaf-f0f40.firebaseapp.com",
+  databaseURL: "https://supsaf-f0f40-default-rtdb.firebaseio.com",
+  projectId: "supsaf-f0f40",
+  storageBucket: "supsaf-f0f40.firebasestorage.app",
+  messagingSenderId: "929046180254",
+  appId: "1:929046180254:web:ac22a6001f03487be9268f",
+  measurementId: "G-WZQ15KJ1PX"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
 document.addEventListener('DOMContentLoaded', () => {
   const cards = document.querySelectorAll('.card');
   const detailView = document.getElementById('image-detail');
@@ -11,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     card.addEventListener('click', () => {
       const img = card.querySelector('img');
       if (!img) return;
+
       const src = img.src;
       const cat = card.querySelector('.category')?.innerText ?? '';
 
@@ -194,9 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Determine current category from hash (optional: search within category? 
-    // Usually search implies global search. Let's do global search.)
-    // Visual update: clear active filter links since we are in "search mode"
+    // Visual update: clear active active filter links
     filterLinks.forEach(link => link.classList.remove('active'));
 
     cards.forEach(card => {
@@ -214,12 +231,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (searchInput) {
     searchInput.addEventListener('input', performSearch);
-    // Prevent form submit on Enter if wrapped in form (it's not, but good practice)
     searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         performSearch();
-        searchInput.blur(); // hide keyboard on mobile
+        searchInput.blur();
       }
     });
   }
@@ -230,4 +246,186 @@ document.addEventListener('DOMContentLoaded', () => {
       performSearch();
     });
   }
+
+  // -----------------------------------------------------
+  // FIREBASE LIKE SYSTEM (Realtime Database)
+  // -----------------------------------------------------
+
+  // Clean up ID for database paths (remove .jpg, etc)
+  function sanitizeId(filename) {
+    return filename.replace(/[\.\#\$\[\]]/g, '_');
+  }
+
+  const likeBtns = document.querySelectorAll('.like-btn'); // Grid buttons
+  const detailLikeBtn = document.getElementById('like-detail-btn'); // Detail button
+
+  // Initialize UI with persistent local "liked" state (Did *I* like it?)
+  // We use existing local storage for the user's personal vote state
+  const myLikes = JSON.parse(localStorage.getItem('supsafLikes')) || [];
+
+  function updateVisualState(btn, isLiked) {
+    const icon = btn.querySelector('i');
+    if (!icon) return;
+
+    if (isLiked) {
+      btn.classList.add('liked');
+      icon.classList.remove('far'); // outline
+      icon.classList.add('fas');    // solid
+      if (detailLikeBtn && btn === detailLikeBtn) btn.style.color = 'var(--supsaf-red)';
+    } else {
+      btn.classList.remove('liked');
+      icon.classList.remove('fas');
+      icon.classList.add('far');
+      if (detailLikeBtn && btn === detailLikeBtn) btn.style.color = '';
+    }
+  }
+
+  function updateCountDisplay(btn, count) {
+    let countEl = btn.querySelector('.like-count');
+    if (!countEl) {
+      countEl = document.createElement('span');
+      countEl.className = 'like-count';
+      btn.appendChild(countEl);
+    }
+    // Only show count if > 0
+    countEl.innerText = count > 0 ? count : '';
+  }
+
+  // 1. Setup GRID buttons
+  likeBtns.forEach(btn => {
+    // Find image
+    const card = btn.closest('.card, .hero-card');
+    const img = card ? card.querySelector('img') : null;
+    if (!img) return;
+
+    const imgSrc = img.getAttribute('src');
+    const filename = imgSrc.split('/').pop();
+    const dbId = sanitizeId(filename); // e.g. supsaf1_jpg
+
+    // Set initial visual state from LocalStorage
+    if (myLikes.includes(filename)) {
+      updateVisualState(btn, true);
+    }
+
+    // Listen to Firebase for global count
+    const countRef = ref(db, 'likes/' + dbId);
+    onValue(countRef, (snapshot) => {
+      const count = snapshot.val() || 0;
+      updateCountDisplay(btn, count);
+      // Also update detail button if it's currently open on this image
+      const expandedImg = document.getElementById('expanded-img');
+      if (expandedImg && expandedImg.src.endsWith(filename)) {
+        if (detailLikeBtn) updateCountDisplay(detailLikeBtn, count);
+      }
+    });
+
+    // Handle Click
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      // Check current local state
+      const currentMyLikes = JSON.parse(localStorage.getItem('supsafLikes')) || [];
+      const isLiked = currentMyLikes.includes(filename);
+
+      // Optimistic UI Update (Instant feedback)
+      updateVisualState(btn, !isLiked);
+
+      // Perform transaction
+      runTransaction(countRef, (currentCount) => {
+        // If null (doesn't exist), treat as 0
+        const val = currentCount || 0;
+        if (isLiked) {
+          // Unlike: decrement
+          return val > 0 ? val - 1 : 0;
+        } else {
+          // Like: increment
+          return val + 1;
+        }
+      });
+
+      // Update Local Storage
+      if (isLiked) {
+        // Remove
+        const idx = currentMyLikes.indexOf(filename);
+        if (idx !== -1) currentMyLikes.splice(idx, 1);
+      } else {
+        // Add
+        currentMyLikes.push(filename);
+      }
+      localStorage.setItem('supsafLikes', JSON.stringify(currentMyLikes));
+    });
+  });
+
+  // 2. Setup DETAIL view button
+  if (detailLikeBtn) {
+    const detailImg = document.getElementById('expanded-img');
+
+    // Observer to handle switching images in the detail view
+    const observer = new MutationObserver(() => {
+      if (!detailImg.src) return;
+      const filename = detailImg.src.split('/').pop();
+      const dbId = sanitizeId(filename);
+
+      // Sync visual state (Did I like this?)
+      const currentMyLikes = JSON.parse(localStorage.getItem('supsafLikes')) || [];
+      updateVisualState(detailLikeBtn, currentMyLikes.includes(filename));
+
+      // Sync count (Fetch once or listen? Ideally listen, but we need to detach old listeners if we do that dynamically. 
+      // Simpler for now: Fetch once, OR rely on the grid listener which runs in background?
+      // Actually, easiest is just attach a NEW one-time fetch or subscribe. To avoid leak, use get() or careful subscribe.
+      // Or simpler: The grid listeners are already active. Just grab the count from the DOM of the corresponding grid card!
+
+      let gridBtn = null;
+      document.querySelectorAll('.card img').forEach(img => {
+        if (img.src.endsWith(filename)) {
+          gridBtn = img.closest('.card').querySelector('.like-btn');
+        }
+      });
+
+      if (gridBtn) {
+        const countText = gridBtn.querySelector('.like-count')?.innerText || '0';
+        updateCountDisplay(detailLikeBtn, parseInt(countText) || 0);
+      }
+    });
+    observer.observe(detailImg, { attributes: true, attributeFilter: ['src'] });
+
+    detailLikeBtn.addEventListener('click', () => {
+      if (!detailImg.src) return;
+      const filename = detailImg.src.split('/').pop();
+      const dbId = sanitizeId(filename);
+      const countRef = ref(db, 'likes/' + dbId);
+
+      const currentMyLikes = JSON.parse(localStorage.getItem('supsafLikes')) || [];
+      const isLiked = currentMyLikes.includes(filename);
+
+      // Update UI locally
+      updateVisualState(detailLikeBtn, !isLiked);
+
+      // Update Grid UI as well to match
+      document.querySelectorAll('.card img').forEach(img => {
+        if (img.src.endsWith(filename)) {
+          const b = img.closest('.card').querySelector('.like-btn');
+          if (b) updateVisualState(b, !isLiked);
+        }
+      });
+
+      // Firebase Transaction
+      runTransaction(countRef, (cur) => {
+        const val = cur || 0;
+        return isLiked ? (val > 0 ? val - 1 : 0) : val + 1;
+      });
+
+      // Local Storage
+      if (isLiked) {
+        const idx = currentMyLikes.indexOf(filename);
+        if (idx !== -1) currentMyLikes.splice(idx, 1);
+      } else {
+        currentMyLikes.push(filename);
+      }
+      localStorage.setItem('supsafLikes', JSON.stringify(currentMyLikes));
+    });
+  }
 });
+
+
