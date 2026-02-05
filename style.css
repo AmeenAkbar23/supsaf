@@ -706,11 +706,50 @@ button:focus {
   /* fa-solid */
 }
 
-.like-count {
-  font-size: 0.9rem;
-  font-weight: 700;
-  margin-left: 6px;
+.nav-btn {
+  background: var(--supsaf-red);
   color: white;
-  min-width: 20px;
-  text-align: left;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.2s;
+  margin-left: 10px;
+}
+
+.nav-btn:hover {
+  transform: scale(1.05);
+}
+
+#user-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 10px;
+}
+
+#user-menu.hidden {
+  display: none;
+}
+
+#user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--supsaf-red);
+}
+
+#logout-btn {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 5px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+#logout-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }

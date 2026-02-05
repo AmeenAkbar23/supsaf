@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA8cKsh5a-6CJ0JgsPhTFw7I0P_XE02yuQ",
@@ -15,8 +16,62 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Auth UI Elements
+  const loginBtn = document.getElementById('login-btn');
+  const userMenu = document.getElementById('user-menu');
+  const userAvatar = document.getElementById('user-avatar');
+  const logoutBtn = document.getElementById('logout-btn');
+
+  // Login Event
+  if (loginBtn) {
+    loginBtn.addEventListener('click', () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // console.log("User signed in:", result.user);
+        }).catch((error) => {
+          console.error("Login failed:", error);
+          alert("Login failed. Please try again.");
+        });
+    });
+  }
+
+  // Logout Event
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      signOut(auth).then(() => {
+        // console.log("User signed out");
+      }).catch((error) => {
+        console.error("Logout failed:", error);
+      });
+    });
+  }
+
+  // Monitor Auth State
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in
+      if (loginBtn) loginBtn.style.display = 'none';
+      if (userMenu) {
+        userMenu.classList.remove('hidden');
+        userMenu.style.display = 'flex'; // override css hidden
+        if (userAvatar) {
+          userAvatar.src = user.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+        }
+      }
+    } else {
+      // User is signed out
+      if (loginBtn) loginBtn.style.display = 'block';
+      if (userMenu) {
+        userMenu.classList.add('hidden');
+        userMenu.style.display = 'none';
+      }
+    }
+  });
+
   const cards = document.querySelectorAll('.card');
   const detailView = document.getElementById('image-detail');
   const backBtn = document.querySelector('.back-btn');
