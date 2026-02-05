@@ -502,6 +502,28 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Comment Section -->
+            <div class="comments-container">
+                <h3 class="comments-title">Comments</h3>
+                <div class="comments-list" id="comments-list">
+                    <!-- Dynamic comments here -->
+                    <p class="no-comments">No comments yet. Be the first!</p>
+                </div>
+
+                <form id="comment-form" class="comment-form hidden">
+                    <img id="comment-avatar" src="" alt="Me">
+                    <div class="input-group">
+                        <input type="text" id="comment-input" placeholder="Add a comment..." autocomplete="off">
+                        <button type="submit" id="submit-comment">Post</button>
+                    </div>
+                </form>
+                <div id="login-to-comment" class="login-prompt">
+                    <p>Please <button class="link-btn"
+                            onclick="document.getElementById('login-btn').click()">login</button> to leave a comment.
+                    </p>
+                </div>
+            </div>
         </div>
     </section>
 

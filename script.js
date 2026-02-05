@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getDatabase, ref, onValue, runTransaction, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, onValue, runTransaction, set, push } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -18,6 +18,11 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+
+// Clean up ID for database paths (remove .jpg, etc)
+function sanitizeId(filename) {
+  return filename.replace(/[\.\#\$\[\]]/g, '_');
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   // Auth UI Elements
@@ -396,11 +401,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // FIREBASE LIKE SYSTEM (Realtime Database)
   // -----------------------------------------------------
 
-  // Clean up ID for database paths (remove .jpg, etc)
-  function sanitizeId(filename) {
-    return filename.replace(/[\.\#\$\[\]]/g, '_');
-  }
-
   const likeBtns = document.querySelectorAll('.like-btn'); // Grid buttons
   const detailLikeBtn = document.getElementById('like-detail-btn'); // Detail button
 
@@ -606,4 +606,117 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // -----------------------------------------------------
+  // COMMENT SYSTEM Logic
+  // -----------------------------------------------------
+
+  const commentsList = document.getElementById('comments-list');
+  const commentForm = document.getElementById('comment-form');
+  const commentInput = document.getElementById('comment-input');
+  const loginToComment = document.getElementById('login-to-comment');
+  const commentAvatar = document.getElementById('comment-avatar');
+
+  let currentCommentUnsubscribe = null;
+
+  // Render a Single Comment
+  function renderComment(data) {
+    const item = document.createElement('div');
+    item.className = 'comment-item';
+    item.innerHTML = `
+      <img src="${data.userAvatar}" alt="Avatar" class="comment-avatar">
+      <div class="comment-content">
+        <div class="comment-header">
+          <span class="comment-author">${data.userName}</span>
+          <span class="comment-time">${new Date(data.timestamp).toLocaleDateString()}</span>
+        </div>
+        <div class="comment-text">${data.text}</div>
+      </div>
+    `;
+    commentsList.appendChild(item);
+    commentsList.scrollTop = commentsList.scrollHeight; // Auto scroll to bottom
+  }
+
+  // Load Comments for specific Image
+  function loadCommentsForImage(filename) {
+    const dbId = sanitizeId(filename);
+    const commentsRef = ref(db, 'comments/' + dbId);
+
+    // Reset List
+    commentsList.innerHTML = '';
+
+    // Detach previous listener if any
+    if (currentCommentUnsubscribe) {
+      currentCommentUnsubscribe();
+      currentCommentUnsubscribe = null;
+    }
+
+    // Subscribe
+    currentCommentUnsubscribe = onValue(commentsRef, (snapshot) => {
+      commentsList.innerHTML = ''; // Re-render all on change (simple approach)
+      const data = snapshot.val();
+      if (data) {
+        Object.values(data).forEach(comment => {
+          renderComment(comment);
+        });
+      } else {
+        commentsList.innerHTML = '<p class="no-comments">No comments yet. Be the first!</p>';
+      }
+    });
+  }
+
+  // Hook into Detail View Open observer (reuse existing observer logic or add new)
+  // We can add logic to the existing MutationObserver on detailImg
+  const detailImg = document.getElementById('expanded-img');
+  if (detailImg) {
+    const commentObserver = new MutationObserver(() => {
+      if (!detailImg.src) return;
+      const filename = detailImg.src.split('/').pop();
+      loadCommentsForImage(filename);
+    });
+    commentObserver.observe(detailImg, { attributes: true, attributeFilter: ['src'] });
+  }
+
+  // Auth State for Comments
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      if (commentForm) commentForm.classList.remove('hidden');
+      if (loginToComment) loginToComment.style.display = 'none';
+      if (commentAvatar) commentAvatar.src = user.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+    } else {
+      if (commentForm) commentForm.classList.add('hidden');
+      if (loginToComment) loginToComment.style.display = 'block';
+    }
+  });
+
+  // Handle Submit
+  if (commentForm) {
+    commentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = commentInput.value.trim();
+      const user = auth.currentUser;
+
+      if (!text || !user) return;
+
+      const filename = detailImg.src.split('/').pop();
+      const dbId = sanitizeId(filename);
+      const commentsRef = ref(db, 'comments/' + dbId);
+
+      const newComment = {
+        userId: user.uid,
+        userName: user.displayName || 'Anonymous',
+        userAvatar: user.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+        text: text,
+        timestamp: Date.now()
+      };
+
+      push(commentsRef, newComment).then(() => {
+        commentInput.value = ''; // clear input
+      }).catch(err => {
+        console.error('Error posting comment:', err);
+        alert('Failed to post comment.');
+      });
+    });
+  }
+
 });
