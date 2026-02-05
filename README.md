@@ -17,5 +17,4 @@ where creators can share their stories without limits.
 •	🔓 100% open-source
 
 🧪 Live Demo
-🌐 https://supsaf.in
 ⚡ https://supsaf.pages.dev
