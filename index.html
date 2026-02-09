@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Dino Runner</title>
+    <meta name="description" content="A unique, neon-styled infinite runner game.">
+    <!-- Inter Font and Press Start 2P for retro vibes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>�</text></svg>">
+</head>
+
+<body>
+
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- UI Overlays -->
+        <div id="startScreen" class="ui-screen active">
+            <h1 class="glitch" data-text="NEON RUNNER">CHILL RUNNER</h1>
+            <p class="blink">PRESS SPACE TO START</p>
+            <p class="subtitle">(or tap screen)</p>
+        </div>
+
+        <div id="gameOverScreen" class="ui-screen">
+            <h1 class="glitch" data-text="GAME OVER">GAME OVER</h1>
+            <div class="score-display">
+                <p>SCORE: <span id="finalScore">0</span></p>
+                <p>HIGH SCORE: <span id="highScoreDisplay">0</span></p>
+            </div>
+            <button id="restartBtn" class="neon-btn">RETRY</button>
+        </div>
+
+        <div class="hud">
+            <div class="score-hud">SCORE: <span id="currentScore">0</span></div>
+        </div>
+    </div>
+
+    <!-- CRT Overlay Effect -->
+    <div class="scanlines"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
