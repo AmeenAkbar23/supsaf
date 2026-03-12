@@ -1,43 +1,49 @@
-#dashboard {
-    background: transparent; /* Keep the canvas particles visible */
-    pointer-events: auto;
-    text-align: center;
-    color: var(--secondary-color);
+// --- New Dashboard Logic ---
+
+function updateDashboard() {
+    const now = new Date();
+    
+    // Update Clock
+    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    document.getElementById('liveClock').textContent = timeString;
+
+    // Update Date
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('liveDate').textContent = now.toLocaleDateString(undefined, dateOptions);
 }
 
-.time-container h1 {
-    font-size: 8rem;
-    margin-bottom: 0;
-    font-family: var(--font-ui); /* Switch to Inter for a modern look */
-    font-weight: 800;
+// Simple Weather Fetch (Using a public API - requires an API Key for real data)
+async function fetchWeather() {
+    // You can get a free key from OpenWeatherMap and put it here
+    const mockTemp = "22°C";
+    const mockDesc = "Partly Cloudy";
+    
+    document.getElementById('weatherTemp').textContent = mockTemp;
+    document.getElementById('weatherDesc').textContent = mockDesc;
 }
 
-#liveDate {
-    font-family: var(--font-ui);
-    font-size: 1.5rem;
-    opacity: 0.7;
-    margin-bottom: 3rem;
+// --- Modified Animation Loop ---
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Keep the aesthetic particles from your original code
+    particles.forEach((part, index) => {
+        part.update();
+        part.draw();
+        if (part.life <= 0) particles.splice(index, 1);
+    });
+
+    // Spawn random particles for background effect
+    if (Math.random() < 0.1) {
+        // Use your existing Particle class
+        particles.push(new Particle(Math.random() * canvas.width, canvas.height - 150));
+    }
+
+    updateDashboard();
+    requestAnimationFrame(animate);
 }
 
-.weather-container {
-    font-family: var(--font-ui);
-    margin-bottom: 3rem;
-}
-
-#weatherTemp {
-    font-size: 3rem;
-    font-weight: 600;
-}
-
-.focus-box input {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    border-bottom: 2px solid var(--secondary-color);
-    color: var(--secondary-color);
-    font-family: var(--font-ui);
-    font-size: 1.2rem;
-    padding: 10px;
-    width: 300px;
-    text-align: center;
-    outline: none;
-}
+// Initialize
+setInterval(fetchWeather, 600000); // Update weather every 10 mins
+fetchWeather();
+animate();
