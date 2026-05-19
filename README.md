@@ -1,28 +1,26 @@
-# � Chill Runner
+# Supsaf 📍
 
-A minimalist, aesthetic infinite runner game designed for relaxation and focus.
+Supsaf is a hyper-local, crowd-sourced discovery platform designed to help travelers find "secret" or non-commercial spots that commercial mapping apps often overlook. It serves as a living, interactive logbook of hidden forests, quiet backwaters, local cafés, and secluded viewpoints.
 
-## ✨ Features
-- **Chill Aesthetic**: Clean light theme with a calming color palette.
-- **Custom Character**: Play as a unique sprite character.
-- **Sleek Graphics**: Scanline effects, particle systems, and smooth animations.
-- **High Score**: Compete against yourself with a persistent high score system.
-- **Responsive**: Tap to jump on mobile, Space/Arrow Up on desktop.
+## 🚀 The Vision
+Commercial maps optimize for the fastest route to famous tourist traps. Supsaf optimizes for the **hidden gem**. Our goal is to provide a "Radar" for explorers to find adventure in their immediate vicinity (within 100km) without needing to know specific names or locations beforehand.
 
-## 🎮 Controls
-- **Jump**: Press `Space`, `Arrow Up`, or Tap the Screen.
-- **Restart**: Press `Space` or Click "Retry" on the Game Over screen.
+## 🛠️ Key Features
+- **Hyper-Local Stream:** Real-time discovery of nearby spots based on your live GPS coordinates.
+- **Proximity Matrix:** Automatically sorts locations by distance—closest spots appear first.
+- **Community-Driven:** Share your own discoveries by logging locations, descriptions, and safety status.
+- **Mobile-First Design:** Fully responsive grid layout, perfect for on-the-go exploration.
+- **Privacy-Centric:** Data is stored locally in the browser cache, ensuring zero unnecessary tracking.
 
-## 🚀 How to Play
-1. Open `index.html` in your browser.
-2. Press Space to start running.
-3. Jump over obstacles to increase your score.
-4. Don't crash!
+## 💻 Tech Stack
+- **Framework:** Next.js (React)
+- **Styling:** Tailwind CSS
+- **Data Persistence:** Browser LocalStorage
+- **Deployment:** Vercel / Cloudflare Pages
 
-## 🛠️ Built With
-- HTML5 Canvas
-- CSS3 (Animations, Variables)
-- Vanilla JavaScript
+## 📦 How to Run Locally
 
-## 📄 License
-Open Source. Iterate and create your own vibe!
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/YOUR_USERNAME/supsaf.git](https://github.com/YOUR_USERNAME/supsaf.git)
+   cd supsaf
