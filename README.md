@@ -1,4 +1,4 @@
-# SUPSAF 🌍
+# SUPSAF 🌏
 
 SUPSAF is a simple platform for discovering beautiful and hidden places people usually never find online.
 
