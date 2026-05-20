@@ -415,8 +415,9 @@ export default function Home() {
                 </div>
 
                 <div className="pt-1 flex items-center justify-between gap-3">
+                  {/* 🗺️ FIXED LINK FOR CROSS-PLATFORM COMPLIANCE */}
                   <a 
-                    href={`http://googleusercontent.com/maps.google.com/maps?q=${selectedPlace.lat},${selectedPlace.lng}`}
+                    href={`https://www.google.com/maps?q=${selectedPlace.lat},${selectedPlace.lng}`}
                     target="_blank"
                     rel="noreferrer"
                     className="block w-full py-3 bg-red-600 hover:bg-red-500 text-center rounded-xl font-bold text-white transition-colors"
