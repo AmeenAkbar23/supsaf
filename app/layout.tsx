@@ -13,7 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "supsaf"
+  title: "supsaf",
+  description: "Exploration stripped down to pure coordinates",
 };
 
 export default function RootLayout({
