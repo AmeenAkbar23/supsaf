@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 
+// 1. Core Data Shape Definition (Always at the top)
 interface HiddenPlace {
   id: number;
   title: string;       
@@ -11,191 +12,412 @@ interface HiddenPlace {
   district: string;    
 }
 
+// 2. Pre-loaded baseline spots across Kerala (42 places)
 const PRE_LOADED_KERALA_SPOTS: HiddenPlace[] = [
-  // --- NORTHERN KERALA ---
+  // --- 1. KASARAGOD DISTRICT ---
   {
     id: 1,
+    title: "Ranipuram Misty Grasslands",
+    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqSYrtNI6tySJyy-frZG-8Sx2_4QJXRQfYjg&s",
+    desc: "Often called the 'Ooty of Kerala.' Hike through thick shola forests to reach massive, windswept green mountaintop meadows covered in rolling white fog.",
+    lat: 12.4278,
+    lng: 75.3524,
+    district: "Kasaragod"
+  },
+  {
+    id: 2,
+    title: "Valiyaparamba Hidden Backwaters",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4f/81/e6/valiayaparmba-backwaters.jpg?w=1100&h=1100&s=1",
+    desc: "A completely peaceful, non-commercial alternative to Alleppey. Surrounded by endless coconut groves and fed by four pristine coastal rivers.",
+    lat: 12.1341,
+    lng: 75.1482,
+    district: "Kasaragod"
+  },
+  {
+    id: 3,
+    title: "Thaikadappuram Secluded Beach",
+    imageUrl: "https://www.keralatourism.org/_next/image/?url=http%3A%2F%2F127.0.0.1%2Fktadmin%2Fimg%2Fpages%2Fmobile%2Fthaikadappuram-beach-1720437580_5797fdf6cc63d064ec4a.webp&w=3840&q=75",
+    desc: "A lonely, wide stretch of sand famous for its complete solitude and the rare Olive Ridley sea turtles that visit the quiet shores during late autumn.",
+    lat: 12.2384,
+    lng: 75.1121,
+    district: "Kasaragod"
+  },
+
+  // --- 2. KANNUR DISTRICT ---
+  {
+    id: 4,
     title: "Kavvayi Island Mangrove Path",
     imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0c/d6/de/2b/you-can-either-opt-for.jpg?w=1200&h=-1&s=1",
-    desc: "A stunning untouched backwater island stretch. Rent a small local wooden rowboat to navigate the incredibly narrow, secret mangrove walls during sunset away from commercial houseboat trails.",
+    desc: "A stunning untouched backwater island stretch. Rent a small local wooden rowboat to navigate incredibly narrow mangrove walls during a quiet sunset.",
     lat: 12.1124,
     lng: 75.2023,
     district: "Kannur"
   },
   {
-    id: 2,
+    id: 5,
+    title: "Paithalmala Cloud Peak Trail",
+    imageUrl: "https://www.dtpckannur.com/uploads/picture_gallery/gallery_images/paithalmala-trekking-1920x1080-20230414135222825468.jpg",
+    desc: "The highest geographic peak in Kannur. A serene trek taking you up past the clouds to an observation tower looking over the dense Kodagu forest borders.",
+    lat: 12.1182,
+    lng: 75.6124,
+    district: "Kannur"
+  },
+  {
+    id: 6,
+    title: "Aralam Deep Sanctuary Track",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/a4/f5/24/aralam-wildlife-sanctuary.jpg?w=1200&h=1200&s=1",
+    desc: "The northernmost wildlife reserve in Kerala. Skip the crowded safari spots; hike alongside forest guards through true, unpolished rainforest pathways.",
+    lat: 11.9542,
+    lng: 75.8412,
+    district: "Kannur"
+  },
+
+  // --- 3. WAYANAD DISTRICT ---
+  {
+    id: 7,
     title: "Aranamala Peak Ridge",
     imageUrl: "https://cdn.tripuntold.com/media/photos/location/2020/09/24/eeaa2778-6b93-4110-bb7f-c1914cb0317f.jpg",
-    desc: "A breathtaking, off-beat mountain ridge offering completely secluded panoramic views of the Western Ghats canopy. Extremely misty and isolated, accessible via a rugged unpaved off-road jeep track.",
+    desc: "A breathtaking, off-beat mountain ridge offering secluded views of the Western Ghats. Extremely misty and isolated, reached via a rugged jeep track.",
     lat: 11.5265,
     lng: 76.1184,
     district: "Wayanad"
   },
   {
-    id: 3,
+    id: 8,
+    title: "Kudukkathu Para Rock Hills",
+    imageUrl: "https://keralapages.in/wp-content/uploads/Kudukkathu-Para-Rock-Formations.webp",
+    desc: "Massive, under-visited rock formations surrounded by high grasslands. Exceptional for evening stargazing due to absolute zero light pollution.",
+    lat: 11.6421,
+    lng: 75.9512,
+    district: "Wayanad"
+  },
+  {
+    id: 9,
+    title: "Pakshipathalam Ancient Rock Caves",
+    imageUrl: "https://www.mywayanad.com/wp-content/uploads/2022/08/Pakshipathalam-4-Wayanad.jpg",
+    desc: "Deep inside the Brahmagiri hills lies a maze of giant, primitive granite boulders hiding secret subterranean caves where wild mountain birds nest.",
+    lat: 11.9124,
+    lng: 75.9841,
+    district: "Wayanad"
+  },
+
+  // --- 4. KOZHIKODE DISTRICT ---
+  {
+    id: 10,
     title: "Thusharagiri Secret Cascade",
     imageUrl: "https://www.keralatourism.org/images/enchanting_kerala/large/thusharagiri_a_trekker_s_delight20161019051950_613_1.jpg",
-    desc: "Deep inside the forest, past the main tourist waterfalls, lies a secluded third-tier cascade pool. Surrounded by towering rock formations and thick woods, it offers total peace.",
+    desc: "Deep inside the forest, past the main tourist areas, lies a secluded third-tier cascade pool surrounded by smooth granite boulders.",
     lat: 11.4744,
     lng: 76.0514,
     district: "Kozhikode"
   },
   {
-    id: 4,
-    title: "Chettuva Mangrove Island Loop",
-    imageUrl: "https://media1.thrillophilia.com/filestore/8seyjrekk180tjafgmhcxkej4e08_1550744990_mangroves-in-chettuva.jpg.jpg",
-    desc: "An incredible network of silent backwater canals weaving underneath a thick canopy of wild mangroves. Rent a tiny local hand-paddled country boat to discover hidden serene water lanes.",
-    lat: 10.5312,
-    lng: 76.0421,
-    district: "Thrissur"
+    id: 11,
+    title: "Vellarimala High Range Trail",
+    imageUrl: "https://www.dtpckozhikode.com/uploads/picture_gallery/gallery_images/vellarimala-20230509172234418149.webp",
+    desc: "A challenging mountain landscape characterized by raw rocky river beds, deep mountain drops, and intense mist cover along the Camel's Hump ridge.",
+    lat: 11.4312,
+    lng: 76.1412,
+    district: "Kozhikode"
   },
   {
-    id: 5,
+    id: 12,
+    title: "Kadalundi Estuary Mangrove Loop",
+    imageUrl: "https://www.keralatourism.org/_next/image/?url=http%3A%2F%2F127.0.0.1%2Fktadmin%2Fimg%2Fpages%2Fvertical%2Faerial-view-of-kadalundi-bird-sanctuary-kozhikode-1738772731_ef0b9f2c02a6889b4a25.webp&w=3840&q=75",
+    desc: "Where the Kadalundi River meets the Arabian Sea. Rent a tiny local canoe to slip through thousands of silent, wild mangrove island nodes.",
+    lat: 11.1284,
+    lng: 75.8241,
+    district: "Kozhikode"
+  },
+
+  // --- 5. MALAPPURAM DISTRICT ---
+  {
+    id: 13,
+    title: "Mini Ooty Arimbra Hills",
+    imageUrl: "https://www.keralatourism.org/_next/image/?url=http%3A%2F%2F127.0.0.1%2Fktadmin%2Fimg%2Fpages%2Fmobile%2Fmini-ooty-glass-bridge-a-thrilling-experience-amidst-arimbra-hills-1727507072_350b28418dfcca0b15ca.webp&w=3840&q=75",
+    desc: "A towering high-altitude ridge famous for its heavy rolling mist and deep stepped valley views. Follow the lower trails for true isolation.",
+    lat: 11.1394,
+    lng: 75.9878,
+    district: "Malappuram"
+  },
+  {
+    id: 14,
+    title: "Nedumkayam Old Teak Reserve",
+    imageUrl: "https://www.keralatourism.org/images/enchanting_kerala/large/nedumkayam_rainforest_unshackle_yourself_here20210910070921_1115_1.jpg",
+    desc: "A peaceful forest area near Nilambur. Walk across a vintage hanging bridge over crystal clear woodland pools where wild deer often gather.",
+    lat: 11.3124,
+    lng: 76.3214,
+    district: "Malappuram"
+  },
+  {
+    id: 15,
+    title: "Kodikuthimala Green Peak",
+    imageUrl: "https://www.keralatourism.org/images/enchanting_kerala/large/kodikuthimala_malappuram20220207100430_1160_1.jpg",
+    desc: "Often called the Ooty of Malappuram. A gentle mountain clearing with watchtowers and continuous cool winds sweeping over natural terraced rocks.",
+    lat: 10.9841,
+    lng: 76.3124,
+    district: "Malappuram"
+  },
+
+  // --- 6. PALAKKAD DISTRICT ---
+  {
+    id: 16,
     title: "Kodiheri Riverside Meadow",
     imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/b7/55/15/near-water-falling-location.jpg?w=1200&h=-1&s=1",
-    desc: "A pristine, wide green grass clearing right beside a sweeping river curve. Completely untouched by commercial vendors, it's perfect for peaceful evening contemplation under the trees.",
+    desc: "A pristine, wide green grass clearing right beside a sweeping river curve. Completely untouched and calm, perfect for peaceful evening contemplation.",
     lat: 10.8912,
     lng: 76.3124,
     district: "Palakkad"
   },
   {
-    id: 6,
-    title: "Mini Ooty Arimbra Hills",
-    imageUrl: "https://www.keralatourism.org/_next/image/?url=http%3A%2F%2F127.0.0.1%2Fktadmin%2Fimg%2Fpages%2Fmobile%2Fmini-ooty-glass-bridge-a-thrilling-experience-amidst-arimbra-hills-1727507072_350b28418dfcca0b15ca.webp&w=3840&q=75",
-    desc: "A towering high-altitude glass clearing famous for its heavy rolling mist and deep stepped valley views. Follow the lower walking trails down into the plantation boundaries for true isolation.",
-    lat: 11.1394,
-    lng: 75.9878,
-    district: "Malappuram"
+    id: 17,
+    title: "Silent Valley Rainforest Border",
+    imageUrl: "https://www.keralatourism.org/ktadmin/img/pages/tablet/silent-valley-national-park-1721217742_f70793578057884756aa.webp",
+    desc: "One of the last remaining undisturbed tropical rainforests in India. Pure, ancient wilderness paths filled with giant trees and rare wildlife.",
+    lat: 11.1241,
+    lng: 76.4321,
+    district: "Palakkad"
+  },
+  {
+    id: 18,
+    title: "Nelliyampathy Orange Hill Country",
+    imageUrl: "https://kfdcecotourism.com/storage/destination/6786481925754.jpg",
+    desc: "A stunning mountain town flanked by old cloud-kissed tea estates, terraced orange orchards, and deep, breathtaking cliff drops.",
+    lat: 10.5341,
+    lng: 76.6912,
+    district: "Palakkad"
   },
 
-  // --- CENTRAL KERALA (ERNAKULAM / IDUKKI / KOTTAYAM) ---
+  // --- 7. THRISSUR DISTRICT ---
   {
-    id: 7,
+    id: 19,
+    title: "Chettuva Mangrove Island Loop",
+    imageUrl: "https://media1.thrillophilia.com/filestore/8seyjrekk180tjafgmhcxkej4e08_1550744990_mangroves-in-chettuva.jpg.jpg",
+    desc: "An incredible network of silent backwater canals weaving underneath wild mangroves. Discover hidden, serene, green water lanes.",
+    lat: 10.5312,
+    lng: 76.0421,
+    district: "Thrissur"
+  },
+  {
+    id: 20,
+    title: "Marottichal Forest Pools",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/ec/1e/3a/marottichal-waterfalls.jpg?w=700&h=400&s=1",
+    desc: "An offbeat forest trek leading away from commercial lanes straight to open natural rock pools and seasonal jungle cascades.",
+    lat: 10.4578,
+    lng: 76.3681,
+    district: "Thrissur"
+  },
+  {
+    id: 21,
+    title: "Chavakkar Beach Backwater Strip",
+    imageUrl: "https://www.keralatourism.org/_next/image/?url=http%3A%2F%2F127.0.0.1%2Fktadmin%2Fimg%2Fpages%2Ftablet%2Fmunakkal-beach-1727446307_75ac2226a3b239d9902f.webp&w=1920&q=75",
+    desc: "A unique coastal anomaly where a completely silent backwater stream flows parallel to a completely deserted sandy ocean beach strip.",
+    lat: 10.5912,
+    lng: 76.0141,
+    district: "Thrissur"
+  },
+
+  // --- 8. ERNAKULAM DISTRICT ---
+  {
+    id: 22,
     title: "Bhoothathankettu Old Forest Trail",
     imageUrl: "https://www.keralatourism.org/images/eco-tourism/trekking_thumb/trekking-trails/_T2A5543_11072018171106.jpg",
-    desc: "Skip the main dam gardens; cross the old structure to find a secret rugged walking trail twisting deep into a protected wilderness area. Leads straight to quiet, smooth river boulder structures.",
+    desc: "Skip the main dam gardens; cross the old structure to find a secret rugged walking trail twisting deep into a protected wilderness area.",
     lat: 10.1342,
     lng: 76.6624,
     district: "Ernakulam"
   },
   {
-    id: 8,
-    title: "Kolukkumalai Eastern Sunrise Ridge",
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/20/9e/8c/caption.jpg?w=1200&h=1200&s=1",
-    desc: "The highest organic tea estate in the world. Walk down the unpaved cliff trail facing east at dawn to watch the massive cloud-bed valleys split open between the mountain peaks.",
-    lat: 10.0284,
-    lng: 77.2241,
-    district: "Idukki"
-  },
-  {
-    id: 9,
-    title: "Anakkulam Wild Elephant Stream",
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/b0/c0/ab/caption.jpg?w=1200&h=-1&s=1",
-    desc: "A unique natural river clearing where herds of wild elephants regularly emerge from the dense reserve forest borders to drink and gather due to special mineral bubbling streams.",
-    lat: 10.1615,
-    lng: 76.9129,
-    district: "Idukki"
-  },
-  {
-    id: 10,
-    title: "Vagamon High-Range Pine Valley",
-    imageUrl: "https://www.trawell.in/admin/images/upload/963467967Vagamon_Pine_Forest.jpg",
-    desc: "An atmospheric, towering pine plantation climbing down steep mountain slopes. Frequently blanketed by a heavy rolling mist, offering complete silence if you follow the lower valley pathways.",
-    lat: 9.6551,
-    lng: 76.9304,
-    district: "Idukki"
-  },
-  {
-    id: 11,
-    title: "Illikkal Kallu Apex Monolith",
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/05/0d/74/scenic-paradise.jpg?w=1200&h=1200&s=1",
-    desc: "A monumental 4000-foot split rock formation offering sweeping panoramic views across the Western Ghats peaks. The trail provides an incredible high-altitude overlook.",
-    lat: 9.7531,
-    lng: 76.8210,
-    district: "Kottayam"
-  },
-  {
-    id: 12,
+    id: 23,
     title: "Areekkal Completely Hidden Cascades",
     imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/8d/3f/97/areekal-waterfalls-piramadam.jpg?w=1200&h=1200&s=1",
-    desc: "A beautifully secluded, terraced waterfall hidden deep inside rubber plantations. The water falls smoothly over multiple sheer rock steps into a clear, shallow natural wading pool.",
+    desc: "A beautifully secluded, terraced waterfall hidden deep inside rubber plantations. The water falls smoothly over multiple rock steps.",
     lat: 9.9682,
     lng: 76.5124,
     district: "Ernakulam"
   },
   {
-    id: 13,
-    title: "Urumbikkara Off-Road Cliff Peak",
-    imageUrl: "https://keralabee.com/wp-content/uploads/2023/09/IMG_20230905_233331-jpg.webp",
-    desc: "An incredible high-altitude plateau reachable only via a challenging, unpaved rocky terrain path. Features old abandoned estate houses, wild stream paths, and endless rolling green ridges.",
-    lat: 9.5841,
-    lng: 76.9112,
-    district: "Idukki"
-  },
-  {
-    id: 14,
+    id: 24,
     title: "Kadamakkudy Mangrove Channels",
     imageUrl: "https://www.dreamholidayskerala.com/blog/wp-content/uploads/2025/10/Kadamakudy-1024x683.jpg",
-    desc: "A peaceful cluster of tiny islands on the outer edge of Cochin. Features endless sweeping views of fish farms, traditional polders, and narrow country boat lanes lined with wild grass.",
+    desc: "A peaceful cluster of tiny islands on the outer edge of Cochin. Features endless views of traditional polders and narrow country boat lanes.",
     lat: 10.0514,
     lng: 76.2641,
     district: "Ernakulam"
   },
 
-  // --- SOUTHERN KERALA ---
+  // --- 9. IDUKKI DISTRICT ---
   {
-    id: 15,
-    title: "Munroe Island Mangrove Canoe Route",
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/a4/6c/2a/munroe-island-canoe-tours.jpg?w=1200&h=-1&s=1",
-    desc: "A labyrinth of miniature canal networks weaving underneath wild mangroves. Hire a tiny hand-paddled wooden canoe at dawn to watch village life wake up right along the quiet banks.",
-    lat: 8.9878,
-    lng: 76.6224,
-    district: "Kollam"
+    id: 25,
+    title: "Kolukkumalai Eastern Sunrise Ridge",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/20/9e/8c/caption.jpg?w=1200&h=1200&s=1",
+    desc: "The highest organic tea estate in the world. Walk down the unpaved cliff trail at dawn to watch the cloud-bed valleys split open.",
+    lat: 10.0284,
+    lng: 77.2241,
+    district: "Idukki"
   },
   {
-    id: 16,
-    title: "Gavi Deep Evergreen Forest Route",
-    imageUrl: "https://www.keralatourism.org/images/microsites/periyar/thekkady-1024x768.jpg",
-    desc: "A strictly protected wilderness area inside Periyar Tiger Reserve boundaries. Thick mossy roads, deep natural water reservoirs, and highly regular sightings of rare native wildlife species.",
-    lat: 9.4384,
-    lng: 77.1662,
-    district: "Pathanamthitta"
+    id: 26,
+    title: "Anakkulam Wild Elephant Stream",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/b0/c0/ab/caption.jpg?w=1200&h=-1&s=1",
+    desc: "A unique natural river clearing where herds of wild elephants regularly emerge from the dense reserve forest borders to drink mineral waters.",
+    lat: 10.1615,
+    lng: 76.9129,
+    district: "Idukki"
   },
   {
-    id: 17,
-    title: "Rosemala Hidden Valley Overlook",
-    imageUrl: "https://indiano.travel/wp-content/uploads/2024/11/Rosemala-View-Point-f.jpg",
-    desc: "Deep inside the Shendurney Wildlife Sanctuary, this viewpoint offers a magnificent view of the reservoir water loops that look exactly like giant green rose petals from above.",
-    lat: 8.9512,
-    lng: 77.1214,
-    district: "Kollam"
+    id: 27,
+    title: "Urumbikkara Off-Road Cliff Peak",
+    imageUrl: "https://keralabee.com/wp-content/uploads/2023/09/IMG_20230905_233331-jpg.webp",
+    desc: "An incredible high-altitude plateau reachable only via unpaved rocky trails. Features abandoned estate buildings and endless green ridges.",
+    lat: 9.5841,
+    lng: 76.9112,
+    district: "Idukki"
+  },
+
+  // --- 10. KOTTAYAM DISTRICT ---
+  {
+    id: 28,
+    title: "Illikkal Kallu Apex Monolith",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/05/0d/74/scenic-paradise.jpg?w=1200&h=1200&s=1",
+    desc: "A monumental 4000-foot split rock formation offering sweeping panoramic views across the Western Ghats peaks.",
+    lat: 9.7531,
+    lng: 76.8210,
+    district: "Kottayam"
   },
   {
-    id: 18,
-    title: "Amboori Ashram Mountain Crest",
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/88/aa/7f/kurisumala-ashram.jpg?w=900&h=-1&s=1",
-    desc: "A peaceful high-altitude settlement bordered by deep water reservoirs and a giant monolithic rock pinnacle. Completely hidden away from standard city routes, providing immense serenity.",
-    lat: 8.4812,
-    lng: 77.1841,
-    district: "Thiruvananthapuram"
+    id: 29,
+    title: "Ilaveezha Poonchira Valley",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/45/ae/a6/elaveezhapoonchira.jpg?w=900&h=-1&s=1",
+    desc: "Meaning 'the valley where leaves don't fall.' A pristine, bowl-shaped green plateau sitting thousands of feet high with zero trees and endless horizons.",
+    lat: 9.8124,
+    lng: 76.7912,
+    district: "Kottayam"
   },
   {
-    id: 19,
+    id: 30,
+    title: "Teekoy Spice Plantation Woods",
+    imageUrl: "https://img.avianexperiences.com/attractions/5e54bc26-667e-4831-814d-686392e8ce3e",
+    desc: "A quiet, low-altitude mountain valley town filled with dense clove, rubber, and vanilla plantations flanked by hidden stream networks.",
+    lat: 9.7124,
+    lng: 76.7141,
+    district: "Kottayam"
+  },
+
+  // --- 11. ALAPPUZHA DISTRICT ---
+  {
+    id: 31,
     title: "Kakkathuruthu Island of Crows",
     imageUrl: "https://www.keralatourism.org/images/newsbytes/large/kakkathuruthu_in_nat_geo_s_must_visit_list20161101050212_1868_1.jpg",
-    desc: "A tiny, thin strip of land inside Vembanad Lake. Famous for its quiet sunset vistas where you can watch traditional fishermen casting nets against a beautiful, golden sky.",
+    desc: "A tiny, thin strip of land inside Vembanad Lake. Famous for quiet sunset vistas where traditional fishermen cast nets against golden skies.",
     lat: 9.8712,
     lng: 76.3421,
     district: "Alappuzha"
   },
   {
-    id: 20,
+    id: 32,
+    title: "Pathiramanal Secret Island Loop",
+    imageUrl: "https://www.dtpcalappuzha.com/uploads/picture_gallery/gallery_images/pathiramanal-island-20230524133601418589.webp",
+    desc: "A floating wilderness sanctuary in the middle of backwaters. Reachable only via country canoe, it acts as a quiet haven for migratory birds.",
+    lat: 9.6124,
+    lng: 76.3841,
+    district: "Alappuzha"
+  },
+  {
+    id: 33,
+    title: "Thottappally Isolated Coast",
+    imageUrl: "https://www.dtpcalappuzha.com/uploads/picture_gallery/gallery_images/thottapally-20230524151753106429.webp",
+    desc: "Where the spillway system meets the open ocean. A dark-sand, dramatic beach boundary lined with coastal trees and completely free of vendors.",
+    lat: 9.3142,
+    lng: 76.3912,
+    district: "Alappuzha"
+  },
+
+  // --- 12. PATHANAMTHITTA DISTRICT ---
+  {
+    id: 34,
+    title: "Gavi Deep Evergreen Forest Route",
+    imageUrl: "https://www.keralatourism.org/images/microsites/periyar/thekkady-1024x768.jpg",
+    desc: "A strictly protected wilderness area inside reserve boundaries. Thick mossy roads, deep water reservoirs, and sightings of rare wildlife.",
+    lat: 9.4384,
+    lng: 77.1662,
+    district: "Pathanamthitta"
+  },
+  {
+    id: 35,
     title: "Chittar Lake Quiet Catchment",
     imageUrl: "https://gaviya.com/wp-content/uploads/2024/08/chittar-dam.jpg",
-    desc: "A completely calm water reservoir cache hidden away behind thick rubber hills and mountain curves. Features clear shores and zero commercial crowds, ideal for absolute quietude.",
+    desc: "A completely calm water reservoir cache hidden away behind thick rubber hills and mountain curves. Features clear shores and absolute quietude.",
     lat: 9.3124,
     lng: 76.8412,
     district: "Pathanamthitta"
+  },
+  {
+    id: 36,
+    title: "Charalkunnu Secluded Hill Station",
+    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-CRToAt3j2a3vWZ2zhsuoDaC38-tOgOCWUQ&s",
+    desc: "A tiny, low-profile hill clearing providing exceptional, peaceful panoramic views of the entire winding Pamba River valley below.",
+    lat: 9.3841,
+    lng: 76.7124,
+    district: "Pathanamthitta"
+  },
+
+  // --- 13. KOLLAM DISTRICT ---
+  {
+    id: 37,
+    title: "Munroe Island Mangrove Canoe Route",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/03/a4/6c/2a/munroe-island-canoe-tours.jpg?w=1200&h=-1&s=1",
+    desc: "A labyrinth of miniature canal networks weaving underneath wild mangroves. Hire a tiny hand-paddled canoe at dawn along quiet banks.",
+    lat: 8.9878,
+    lng: 76.6224,
+    district: "Kollam"
+  },
+  {
+    id: 38,
+    title: "Rosemala Hidden Valley Overlook",
+    imageUrl: "https://indiano.travel/wp-content/uploads/2024/11/Rosemala-View-Point-f.jpg",
+    desc: "Deep inside the wildlife sanctuary, this viewpoint offers a magnificent view of water loops that look exactly like giant green rose petals from above.",
+    lat: 8.9512,
+    lng: 77.1214,
+    district: "Kollam"
+  },
+  {
+    id: 39,
+    title: "Thenmala Ancient Shola Trails",
+    imageUrl: "https://www.keralatourism.org/_next/image/?url=http%3A%2F%2F127.0.0.1%2Fktadmin%2Fimg%2Fpages%2Fmobile%2Fthenmala-1724145142_529d5126261b168535ad.webp&w=3840&q=75",
+    desc: "India's first planned eco-tourism zone. Deep forest walking paths, structural suspension bridges, and silent, moss-covered wilderness tracks.",
+    lat: 8.9012,
+    lng: 77.1041,
+    district: "Kollam"
+  },
+
+  // --- 14. THIRUVANANTHAPURAM DISTRICT ---
+  {
+    id: 40,
+    title: "Amboori Ashram Mountain Crest",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/88/aa/7f/kurisumala-ashram.jpg?w=900&h=-1&s=1",
+    desc: "A peaceful settlement bordered by deep water reservoirs and a monolithic rock pinnacle. Hidden away from standard city routes.",
+    lat: 8.4812,
+    lng: 77.1841,
+    district: "Thiruvananthapuram"
+  },
+  {
+    id: 41,
+    title: "Ponmudi Misty Hairpin Ridge",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/75/e3/cd/ponmudi.jpg?w=900&h=500&s=1",
+    desc: "Ascend past 22 dramatic mountain hairpin curves to find a stunning hill peak permanently blanketed by rolling fog and cold mountain air.",
+    lat: 8.7612,
+    lng: 77.1141,
+    district: "Thiruvananthapuram"
+  },
+  {
+    id: 42,
+    title: "Kappil Beach Estuary Overlook",
+    imageUrl: "https://www.keralatourism.org/_next/image/?url=http%3A%2F%2F127.0.0.1%2Fktadmin%2Fimg%2Fpages%2Ftablet%2Fkappil-beach-1727452074_793df661390d99a3fac2.webp&w=1920&q=75",
+    desc: "A breathtaking coastal stretch where a high cliff ridge separates the crashing waves of the Arabian Sea from the completely silent Edava Lake logs.",
+    lat: 8.7841,
+    lng: 76.6812,
+    district: "Thiruvananthapuram"
   }
 ];
 
@@ -283,10 +505,12 @@ export default function Home() {
             />
             <h1 id="text-logo" className="text-2xl sm:text-3xl font-black text-red-500 tracking-tighter" style={{ display: 'none' }}>supsaf</h1>
             
-            {/* 🏷️ INCORPORATED SUBTLE BETA STATUS MATRIX BADGE AND GPS ENGINE METRICS */}
+            {/* 🏷️ DYNAMIC BLINKING HARDWARE ENGINE STATUS RADAR BADGE */}
             <div className="flex flex-wrap items-center gap-2">
               <div className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-[10px] sm:text-[11px] text-zinc-400 font-medium">
-                <span className={`h-1.5 w-1.5 rounded-full ${gpsStatus === 'ready' ? 'bg-emerald-500 animate-pulse' : 'bg-zinc-600'}`}></span>
+                <span className={`h-1.5 w-1.5 rounded-full animate-pulse transition-all duration-500 ${
+                  gpsStatus === 'ready' ? 'bg-emerald-500' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.7)]'
+                }`}></span>
                 {gpsStatus === 'ready' ? 'Radar Tracking Active' : 'Radar Core Off-Grid'}
               </div>
               <span className="text-[9px] uppercase font-black px-1.5 py-0.5 tracking-wider bg-red-950/40 text-red-400 border border-red-900/40 rounded-md">
@@ -415,9 +639,9 @@ export default function Home() {
                 </div>
 
                 <div className="pt-1 flex items-center justify-between gap-3">
-                  {/* 🗺️ FIXED LINK FOR CROSS-PLATFORM COMPLIANCE */}
+                  {/* 🗺️ CLEAN GLOBAL UNIVERSAL DEEPLINK TEMPLATE */}
                   <a 
-                    href={`https://www.google.com/maps?q=${selectedPlace.lat},${selectedPlace.lng}`}
+                    href={`https://www.google.com/maps/search/?api=1&query=${selectedPlace.lat},${selectedPlace.lng}`}
                     target="_blank"
                     rel="noreferrer"
                     className="block w-full py-3 bg-red-600 hover:bg-red-500 text-center rounded-xl font-bold text-white transition-colors"
@@ -436,7 +660,7 @@ export default function Home() {
         <div className="max-w-6xl w-full mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-zinc-500">
           
           <div>
-            &copy; {new Date().getFullYear()} <span className="text-zinc-400 font-bold">supsaf</span>. All rights reserved.
+            © {new Date().getFullYear()} <span className="text-zinc-400 font-bold">supsaf</span>. All rights reserved.
           </div>
 
           <div className="flex items-center gap-6">
