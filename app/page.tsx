@@ -12,7 +12,7 @@ interface Coords {
 
 const DEFAULT_COORDS: Coords = { lat: 9.9312, lng: 76.2673 };
 const KERALA_DISTRICTS = [
-  "All Districts",
+  "All Destinations",
   "Thiruvananthapuram", "Kollam", "Pathanamthitta", "Alappuzha",
   "Kottayam", "Idukki", "Ernakulam", "Thrissur", "Palakkad",
   "Malappuram", "Kozhikode", "Wayanad", "Kannur", "Kasaragod",
@@ -26,7 +26,6 @@ function haversineKm(from: Coords, to: Coords): number {
   const a = Math.sin(dLat / 2) ** 2 + Math.cos((from.lat * Math.PI) / 180) * Math.cos((to.lat * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
   const straightLineKm = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   
-  // Real driving road matrix multiplier
   return Math.round(straightLineKm * 1.3);
 }
 
@@ -89,12 +88,11 @@ function PlaceModal({ place, distKm, onClose }: PlaceModalProps) {
     return () => document.removeEventListener('keydown', handler);
   }, [onClose]);
 
-  // Universal deep-link coordinate mapping query format string
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lng}`;
+  const mapsUrl = `http://googleusercontent.com/maps.google.com/maps?q=${place.lat},${place.lng}`;
 
   return (
     <div role="dialog" aria-modal="true" aria-label={place.title} className="fixed inset-0 bg-black/80 backdrop-blur-md z-[6000] flex items-center justify-center p-3 sm:p-4" onClick={onClose}>
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl sm:rounded-3xl w-full max-w-xl max-h-[92dvh] overflow-y-auto shadow-2xl relative [-webkit-overflow-scrolling:touch]" style={{ scrollbarWidth: 'none' }} onClick={(e) => e.stopPropagation()}>
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl sm:rounded-3xl w-full max-w-xl max-h-[92dvh] overflow-y-auto shadow-2xl relative" style={{ scrollbarWidth: 'none' }} onClick={(e) => e.stopPropagation()}>
         <div className="w-full h-48 sm:h-64 bg-zinc-800 relative flex-shrink-0">
           <img src={place.imageUrl} alt={place.title} className="w-full h-full object-cover"
             onError={(e) => { const t = e.currentTarget; t.style.display = 'none'; const f = t.nextElementSibling as HTMLElement | null; if (f) f.style.display = 'flex'; }} />
@@ -127,7 +125,7 @@ export default function Home() {
   const [selectedPlace, setSelectedPlace] = useState<HiddenPlace | null>(null);
   const [gpsStatus, setGpsStatus] = useState<GpsStatus>('searching');
   const [userCoords, setUserCoords] = useState<Coords | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<string>('All Districts');
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('All Destinations');
 
   useEffect(() => {
     if (!navigator.geolocation) { setGpsStatus('failed'); return; }
@@ -147,7 +145,12 @@ export default function Home() {
 
   const displaySpots = useMemo(() => {
     return spotsWithDist
-      .filter((p) => selectedDistrict === 'All Districts' || p.district === selectedDistrict)
+      .filter((p) => {
+        if (selectedDistrict === 'All Destinations') {
+          return p.distKm <= 50; 
+        }
+        return p.district === selectedDistrict;
+      })
       .sort((a, b) => a.distKm - b.distKm);
   }, [spotsWithDist, selectedDistrict]);
 
@@ -155,12 +158,11 @@ export default function Home() {
     (e: React.ChangeEvent<HTMLSelectElement>) => setSelectedDistrict(e.target.value), [],
   );
 
-  // 🌟 DYNAMIC RENDERING: SHIFTS "HIDDEN SPOTS" LOGIC DIRECTLY OVER TO "DESTINATIONS IN [DISTRICT]"
   const statusLabel =
-    selectedDistrict !== 'All Districts'
+    selectedDistrict !== 'All Destinations'
       ? `Destinations in ${selectedDistrict}`
       : gpsStatus === 'ready'
-      ? 'All Nearby Destinations'
+      ? 'All Nearby Destinations (within 50 km)'
       : 'All Destinations';
 
   return (
@@ -179,7 +181,6 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-3 w-full sm:w-auto justify-start sm:justify-end flex-wrap">
             <div className="relative">
-              {/* Dropdown element configured completely emoji-free */}
               <select value={selectedDistrict} onChange={handleDistrictChange} aria-label="Filter by district" className="bg-zinc-900 text-zinc-200 border border-zinc-800 pl-4 pr-10 py-2.5 rounded-xl text-xs font-bold focus:outline-none focus:border-zinc-600 cursor-pointer appearance-none active:scale-95 transition-all focus-visible:ring-2 focus-visible:ring-red-500">
                 {KERALA_DISTRICTS.map((d) => (
                   <option key={d} value={d} className="bg-zinc-950 text-zinc-300">
@@ -195,13 +196,12 @@ export default function Home() {
         {gpsStatus === 'failed' && (
           <div role="alert" className="mb-6 flex items-center gap-2.5 bg-zinc-900/60 border border-zinc-800 rounded-xl px-4 py-3 text-xs text-zinc-400">
             <span className="text-amber-400 text-base" aria-hidden="true">⚠️</span>
-            <span>Location unavailable — distances shown from <strong className="text-zinc-300">Kochi</strong>. Enable browser location access for accurate results.</span>
+            <span>Location unavailable — Enable browser location access for accurate results.</span>
           </div>
         )}
 
         <div className="mb-8 bg-zinc-900/20 border border-zinc-900 px-5 py-4 rounded-2xl flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
-            {/* 🌟 REMOVED INDEPENDENT MAP-PIN BADGES TO SOLVE THE DUPLICATE BADGE LOGIC ERROR */}
             <span className="text-base" aria-hidden="true">📍</span>
             <h2 className="text-xs sm:text-sm font-bold text-zinc-100 tracking-wide uppercase">{statusLabel}</h2>
           </div>
@@ -220,7 +220,7 @@ export default function Home() {
           ) : (
             <div className="py-16 text-center border border-dashed border-zinc-800 rounded-2xl max-w-md mx-auto p-4">
               <p className="text-zinc-400 text-sm mb-4">No spots found for this district yet.</p>
-              <button onClick={() => setSelectedDistrict('All Districts')} className="px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-300 hover:border-zinc-700 transition-all">
+              <button onClick={() => setSelectedDistrict('All Destinations')} className="px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-300 hover:border-zinc-700 transition-all">
                 Clear filter
               </button>
             </div>
