@@ -1,33 +1,48 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+// src/app/layout.tsx
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import type { Metadata } from 'next';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "supsaf",
-  description: "Exploration stripped down to pure coordinates",
+  title: 'supsaf',
+  description: 'Explore verified travel destinations near you.',
+  openGraph: {
+    siteName: 'supsaf',
+    title: 'supsaf',
+    url: 'https://supsaf.in',
+  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const siteNameJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'supsaf',
+    url: 'https://supsaf.in',
+  };
+
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(siteNameJsonLd),
+          }}
+        />
+
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1866248648616254"
+          crossOrigin="anonymous"
+        />
+      </head>
+
+      <body>{children}</body>
     </html>
   );
 }
