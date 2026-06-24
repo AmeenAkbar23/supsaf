@@ -88,7 +88,7 @@ function PlaceModal({ place, distKm, onClose }: PlaceModalProps) {
     return () => document.removeEventListener('keydown', handler);
   }, [onClose]);
 
-  const mapsUrl = `http://googleusercontent.com/maps.google.com/maps?q=${place.lat},${place.lng}`;
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lng}`;
 
   return (
     <div role="dialog" aria-modal="true" aria-label={place.title} className="fixed inset-0 bg-black/80 backdrop-blur-md z-[6000] flex items-center justify-center p-3 sm:p-4" onClick={onClose}>
